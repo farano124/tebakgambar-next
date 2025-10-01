@@ -1,12 +1,6 @@
 import { createServerClient } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
 
-interface RouteParams {
-  params: {
-    level: string
-  }
-}
-
 export async function GET(request: NextRequest, { params }: { params: Promise<{ level: string }> }) {
   try {
     console.log('🎮 Level API called')
@@ -50,7 +44,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Get level data
     const { data: level, error: levelError } = await supabase
       .from('levels')
-      .select('id, level, gambar, makna, peribahasa')
+      .select('id, level, gambar, jawaban, makna, peribahasa')
       .eq('level', levelNumber)
       .single()
 
@@ -89,6 +83,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({
       level: level.level,
       gambar: level.gambar,
+      jawaban: level.jawaban,
       makna: level.makna,
       peribahasa: level.peribahasa,
       progress: progress ? {

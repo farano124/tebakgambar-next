@@ -30,7 +30,7 @@ export default function LoginPage() {
     setIsLoading(true)
     try {
       await signIn(email, password)
-    } catch (error) {
+    } catch {
       // Error already handled in signIn function
     } finally {
       setIsLoading(false)

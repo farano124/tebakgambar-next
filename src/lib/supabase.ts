@@ -16,10 +16,13 @@ export const supabase = createClientComponentClient()
 export function createServerClient(cookies?: any) {
   return createSSRServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: cookies || {
-      getAll() {
-        return []
+      get() {
+        return undefined
       },
-      setAll() {
+      set() {
+        // No-op for API routes
+      },
+      remove() {
         // No-op for API routes
       },
     },

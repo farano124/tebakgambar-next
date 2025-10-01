@@ -16,6 +16,7 @@ import toast from 'react-hot-toast'
 interface LevelData {
   level: number
   gambar?: string
+  jawaban?: string
   makna?: string
   peribahasa?: string
   progress?: {
@@ -79,8 +80,8 @@ export default function GamePage() {
       const data = await response.json()
       setLevelData(data)
       // Store the correct answer for hint system
-      if (data.peribahasa) {
-        setCorrectAnswer(data.peribahasa.toUpperCase())
+      if (data.jawaban) {
+        setCorrectAnswer(data.jawaban.toUpperCase())
       }
     } catch (error) {
       console.error('Error fetching level:', error)
@@ -292,18 +293,18 @@ export default function GamePage() {
             <div className="mb-8">
               <div className="relative max-w-full max-h-64 mx-auto card-hover-3d">
                 <Image
-                  src={`/api/images/${levelData.level}.jpg`}
+                  src={levelData.gambar || '/file.svg'}
                   alt={`Level ${levelData.level} - Tebak Gambar`}
                   width={500}
                   height={300}
                   className="rounded-2xl shadow-2xl object-contain transition-all duration-300 hover:scale-105"
                   priority
                   placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0Rpv6pX6BU6M6l6pWzK2XvfFp3ZfbrD4"
+                  blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
                   onError={(e) => {
                     // Fallback if image doesn't exist
                     const target = e.target as HTMLImageElement
-                    target.src = '/placeholder-image.jpg'
+                    target.src = '/file.svg'
                   }}
                 />
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>

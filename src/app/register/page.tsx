@@ -47,7 +47,7 @@ export default function RegisterPage() {
     try {
       await signUp(formData.email, formData.password, formData.username, formData.nama)
       // Note: signUp will show success message and redirect will be handled by auth state change
-    } catch (error) {
+    } catch {
       // Error already handled in signUp function
     } finally {
       setIsLoading(false)

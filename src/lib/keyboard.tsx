@@ -88,7 +88,8 @@ export function useKeyboardShortcuts(
 
   return {
     enabled,
-    setEnabled: (newEnabled: boolean) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setEnabled: (_newEnabled: boolean) => {
       // This would need to be handled by parent component
       // since we can't modify the options directly
     }
@@ -115,19 +116,22 @@ export function useGameKeyboardShortcuts(
     },
     {
       shortcut: 'Enter',
-      handler: (event: KeyboardEvent) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      handler: (_event: KeyboardEvent) => {
         handlers.onSubmit?.()
       }
     },
     {
       shortcut: 'ArrowRight',
-      handler: (event: KeyboardEvent) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      handler: (_event: KeyboardEvent) => {
         handlers.onNextLevel?.()
       }
     },
     {
       shortcut: 'ArrowLeft',
-      handler: (event: KeyboardEvent) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      handler: (_event: KeyboardEvent) => {
         handlers.onPreviousLevel?.()
       }
     }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, memo, useEffect, useRef } from 'react'
+import { useState, useCallback, memo, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { useSound } from '@/lib/sound'
 import { Lightbulb, Eye, EyeOff } from 'lucide-react'
@@ -10,7 +10,6 @@ interface HintSystemProps {
   answer: string
   onHintUsed?: (hintsUsed: number) => void
   disabled?: boolean
-  hintCount?: number
   maxHints?: number
 }
 
@@ -18,7 +17,6 @@ export const HintSystem = memo(function HintSystem({
   answer,
   onHintUsed,
   disabled = false,
-  hintCount = 0,
   maxHints = 3
 }: HintSystemProps) {
   const { playSound } = useSound()

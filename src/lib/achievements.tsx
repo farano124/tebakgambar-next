@@ -174,11 +174,6 @@ export function useAchievements() {
   const [unlockedAchievements, setUnlockedAchievements] = useState<Achievement[]>([])
   const { playSound } = useSound()
 
-  // Load user achievements
-  useEffect(() => {
-    loadUserAchievements()
-  }, [])
-
   const loadUserAchievements = useCallback(async () => {
     try {
       setLoading(true)
@@ -199,6 +194,11 @@ export function useAchievements() {
       setLoading(false)
     }
   }, [])
+
+  // Load user achievements
+  useEffect(() => {
+    loadUserAchievements()
+  }, [loadUserAchievements])
 
   const checkAndUnlockAchievements = useCallback(async (gameStats: GameStats) => {
     const newlyUnlocked: Achievement[] = []
