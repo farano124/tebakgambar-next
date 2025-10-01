@@ -9,6 +9,8 @@ interface RouteParams {
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ level: string }> }) {
   try {
+    console.log('🎮 Level API called')
+
     const supabase = createServerClient({
       cookies: {
         getAll() {
@@ -23,7 +25,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         },
       },
     })
+
+    console.log('🔗 Supabase client created')
+
     const { data: { user }, error: userError } = await supabase.auth.getUser()
+    console.log('👤 User check result:', { user: user?.id, error: userError?.message })
 
     if (userError || !user) {
       return NextResponse.json(
@@ -93,8 +99,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   } catch (error) {
     console.error('API error:', error)
+    console.error('Error details:', error instanceof Error ? error.message : 'Unknown error')
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace')
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

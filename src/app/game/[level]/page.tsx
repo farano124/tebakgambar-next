@@ -71,7 +71,9 @@ export default function GamePage() {
       }
 
       if (!response.ok) {
-        throw new Error('Failed to fetch level data')
+        const errorData = await response.text()
+        console.error('API Error:', response.status, errorData)
+        throw new Error(`Failed to fetch level data: ${response.status} ${errorData}`)
       }
 
       const data = await response.json()
