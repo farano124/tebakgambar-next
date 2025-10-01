@@ -45,9 +45,19 @@ export default function Dashboard() {
             setUserProfile(data)
             setIsAdmin(data.akses === 0) // 0 = admin
           } else {
-            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+            console.error('Response status:', response.status)
+            console.error('Response statusText:', response.statusText)
+            console.error('Response headers:', Object.fromEntries(response.headers.entries()))
+            const responseText = await response.text()
+            console.error('Response body text:', responseText)
+            let errorData
+            try {
+              errorData = JSON.parse(responseText)
+            } catch {
+              errorData = { error: 'Invalid JSON response' }
+            }
             setProfileError(errorData.error || 'Failed to load profile')
-            console.error('Error fetching user profile:', errorData)
+            console.error('Parsed errorData:', errorData)
           }
         } catch (error) {
           setProfileError('Network error: Unable to connect to server')

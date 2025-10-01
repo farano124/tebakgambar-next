@@ -50,6 +50,18 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Get total players count
+    const { count: totalPlayersCount, error: countError } = await supabase
+      .from('users')
+      .select('*', { count: 'exact', head: true })
+      .eq('akses', 1)
+
+    if (countError) {
+      console.error('Error counting total players:', countError)
+    }
+
+    const totalPlayers = totalPlayersCount || rankings.length
+
     // Add rank numbers and find current user's rank
     let currentUserRank = null
     const rankingsWithRank = rankings.map((player, index) => {
@@ -73,8 +85,16 @@ export async function GET(request: NextRequest) {
 
     // If current user is not in top 50, get their specific ranking
     if (!currentUserRank) {
-      const { data: userRankData } = await supabase
+      const { data: userRankData, error: rpcError } = await supabase
         .rpc('get_user_rank', { user_id: user.id })
+
+      if (rpcError) {
+        console.error('RPC error:', rpcError)
+        return NextResponse.json(
+          { error: 'Failed to calculate user rank' },
+          { status: 500 }
+        )
+      }
 
       if (userRankData) {
         currentUserRank = userRankData
@@ -84,7 +104,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       rankings: rankingsWithRank,
       currentUserRank,
-      totalPlayers: rankings.length
+      totalPlayers
     })
 
   } catch (error) {

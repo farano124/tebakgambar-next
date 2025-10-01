@@ -6,6 +6,11 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 export async function GET(request: NextRequest) {
   try {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Missing Supabase environment variables')
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    }
+
     console.log('API Route - Cookies received:', request.cookies.getAll().map(c => ({ name: c.name, value: c.value.substring(0, 20) + '...' })))
 
     // Create Supabase server client with proper SSR cookie handling
@@ -125,6 +130,8 @@ export async function PUT(request: NextRequest) {
       level: data.level,
       akses: data.akses,
       salah: data.salah,
+      email: user.email,
+      created_at: data.created_at,
       updated_at: data.updated_at
     })
 
