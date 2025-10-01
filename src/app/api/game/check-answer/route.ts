@@ -3,7 +3,20 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerClient()
+    const supabase = createServerClient({
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setAll(cookiesToSet: any[]) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          cookiesToSet.forEach(({ name, value, options }: any) => {
+            request.cookies.set({ name, value, ...options })
+          })
+        },
+      },
+    })
     const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (userError || !user) {
