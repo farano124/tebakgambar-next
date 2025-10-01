@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
-import { ArrowLeft, Trophy, Medal, Award, Crown, Star } from 'lucide-react'
+import { Trophy, Medal, Award, Crown, Star, ArrowLeft } from 'lucide-react'
 
 interface RankingUser {
   rank: number
@@ -17,68 +17,68 @@ interface RankingUser {
   created_at: string
 }
 
-interface RankingsData {
-  rankings: RankingUser[]
-  currentUserRank: number | null
-  totalPlayers: number
-}
-
 export default function RankingsPage() {
   const { user, loading } = useAuth()
   const router = useRouter()
-  const [rankingsData, setRankingsData] = useState<RankingsData | null>(null)
+  const [rankings, setRankings] = useState<RankingUser[]>([])
+  const [currentUserRank, setCurrentUserRank] = useState<number | null>(null)
+  const [totalPlayers, setTotalPlayers] = useState(0)
   const [loadingRankings, setLoadingRankings] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/')
-    }
-  }, [user, loading, router])
-
-  useEffect(() => {
-    const fetchRankings = async () => {
-      try {
-        const response = await fetch('/api/rankings')
-        if (response.ok) {
-          const data = await response.json()
-          setRankingsData(data)
-        }
-      } catch (error) {
-        console.error('Error fetching rankings:', error)
-      } finally {
-        setLoadingRankings(false)
-      }
+      return
     }
 
     if (user) {
       fetchRankings()
     }
-  }, [user])
+  }, [user, loading, router])
+
+  const fetchRankings = async () => {
+    try {
+      setLoadingRankings(true)
+      setError(null)
+      const response = await fetch('/api/rankings')
+
+      if (response.ok) {
+        const data = await response.json()
+        setRankings(data.rankings || [])
+        setCurrentUserRank(data.currentUserRank)
+        setTotalPlayers(data.totalPlayers || 0)
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        setError(errorData.error || 'Failed to load rankings')
+      }
+    } catch (error) {
+      setError('Network error: Unable to connect to server')
+      console.error('Error fetching rankings:', error)
+    } finally {
+      setLoadingRankings(false)
+    }
+  }
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
         return <Crown className="w-6 h-6 text-yellow-400" />
       case 2:
-        return <Medal className="w-6 h-6 text-gray-400" />
+        return <Medal className="w-6 h-6 text-gray-300" />
       case 3:
         return <Award className="w-6 h-6 text-amber-600" />
       default:
-        return <span className="w-6 h-6 flex items-center justify-center text-white font-bold text-sm">#{rank}</span>
+        return <Star className="w-5 h-5 text-purple-400" />
     }
   }
 
-  const getRankBgColor = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return 'bg-gradient-to-r from-yellow-400 to-yellow-600'
-      case 2:
-        return 'bg-gradient-to-r from-gray-300 to-gray-500'
-      case 3:
-        return 'bg-gradient-to-r from-amber-400 to-amber-600'
-      default:
-        return 'bg-white/10'
-    }
+  const getRankBadge = (rank: number) => {
+    if (rank === 1) return 'bg-gradient-to-r from-yellow-400 to-yellow-600'
+    if (rank === 2) return 'bg-gradient-to-r from-gray-300 to-gray-500'
+    if (rank === 3) return 'bg-gradient-to-r from-amber-500 to-amber-700'
+    if (rank <= 10) return 'bg-gradient-to-r from-purple-400 to-purple-600'
+    return 'bg-gradient-to-r from-blue-400 to-blue-600'
   }
 
   if (loading || loadingRankings) {
@@ -89,45 +89,53 @@ export default function RankingsPage() {
     )
   }
 
-  if (!user || !rankingsData) {
-    return null
+  if (!user) {
+    return null // Will redirect
   }
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 slide-in-up">
       {/* Header */}
-      <nav className="bg-white/10 backdrop-blur-md rounded-lg p-4 mb-8">
+      <nav className="glass-card-enhanced p-6 mb-8 floating">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 slide-in-left">
             <Link href="/dashboard">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="btn-hover-lift">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali
               </Button>
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-white flex items-center">
-                <Trophy className="w-6 h-6 mr-2 text-yellow-400" />
+              <h1 className="text-4xl font-bold rainbow-text font-display flex items-center">
+                <Trophy className="w-10 h-10 mr-3 pulse-glow" />
                 Peringkat Pemain
               </h1>
-              <p className="text-white/60 text-sm">
-                Top {rankingsData.rankings.length} pemain terbaik
-              </p>
+              <p className="text-white/70">Lihat posisi Anda di antara pemain lain</p>
+            </div>
+          </div>
+          <div className="slide-in-right">
+            <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center pulse-glow">
+              <Medal className="w-6 h-6 text-white" />
             </div>
           </div>
         </div>
       </nav>
 
       {/* Current User Rank Highlight */}
-      {rankingsData.currentUserRank && rankingsData.currentUserRank > 50 && (
-        <div className="max-w-4xl mx-auto mb-8">
-          <div className="bg-blue-500/20 backdrop-blur-md rounded-lg p-4 border border-blue-400/30">
-            <div className="flex items-center justify-center space-x-4">
-              <Star className="w-6 h-6 text-blue-400" />
-              <span className="text-white font-semibold">
-                Peringkat Anda: #{rankingsData.currentUserRank}
-              </span>
-              <Star className="w-6 h-6 text-blue-400" />
+      {currentUserRank && (
+        <div className="max-w-4xl mx-auto mb-8 slide-in-up">
+          <div className="glass-card-enhanced p-6 border-2 border-purple-400/50 floating bounce-in">
+            <div className="text-center">
+              <h3 className="text-xl font-bold rainbow-text mb-4">Peringkat Anda</h3>
+              <div className="flex items-center justify-center space-x-6">
+                <div className={`w-20 h-20 rounded-full ${getRankBadge(currentUserRank)} flex items-center justify-center shadow-2xl pulse-glow`}>
+                  {getRankIcon(currentUserRank)}
+                </div>
+                <div>
+                  <div className="text-4xl font-bold rainbow-text">#{currentUserRank}</div>
+                  <div className="text-white/70 text-lg">dari {totalPlayers} pemain</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -135,99 +143,75 @@ export default function RankingsPage() {
 
       {/* Rankings List */}
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white/10 backdrop-blur-md rounded-lg overflow-hidden">
-          {/* Table Header */}
-          <div className="bg-white/20 px-6 py-4">
-            <div className="grid grid-cols-12 gap-4 text-white font-semibold">
-              <div className="col-span-2">Peringkat</div>
-              <div className="col-span-4">Pemain</div>
-              <div className="col-span-2 text-center">Level</div>
-              <div className="col-span-2 text-center">Kesalahan</div>
-              <div className="col-span-2 text-center">Bergabung</div>
-            </div>
+        {error ? (
+          <div className="glass-card p-8 text-center">
+            <h3 className="text-xl font-bold text-white mb-4">Error Loading Rankings</h3>
+            <p className="text-white/70 mb-6">{error}</p>
+            <Button onClick={fetchRankings}>Coba Lagi</Button>
           </div>
-
-          {/* Rankings Rows */}
-          <div className="divide-y divide-white/10">
-            {rankingsData.rankings.map((player) => (
+        ) : (
+          <div className="space-y-4">
+            {rankings.map((player, index) => (
               <div
                 key={player.id}
-                className={`px-6 py-4 hover:bg-white/5 transition-colors ${
-                  player.id === user.id ? 'bg-blue-500/20 border-l-4 border-blue-400' : ''
+                className={`glass-card-enhanced p-6 transition-all duration-300 card-hover-3d bounce-in ${
+                  player.id === user.id ? 'border-2 border-purple-400/50 bg-purple-500/10 floating' : ''
                 }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="grid grid-cols-12 gap-4 items-center">
-                  {/* Rank */}
-                  <div className="col-span-2 flex items-center justify-center">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${getRankBgColor(player.rank)}`}>
-                      {getRankIcon(player.rank)}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className={`w-12 h-12 rounded-full ${getRankBadge(player.rank)} flex items-center justify-center shadow-lg`}>
+                      {player.rank <= 3 ? getRankIcon(player.rank) : <span className="text-white font-bold">{player.rank}</span>}
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-bold text-white">{player.nama}</h3>
+                      <p className="text-white/60">@{player.username}</p>
                     </div>
                   </div>
 
-                  {/* Player Info */}
-                  <div className="col-span-4">
-                    <div className="flex flex-col">
-                      <span className="text-white font-semibold">{player.nama}</span>
-                      <span className="text-white/60 text-sm">@{player.username}</span>
+                  <div className="text-right">
+                    <div className="flex items-center space-x-4">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold gradient-text">{player.level}</div>
+                        <div className="text-xs text-white/60">Level</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-red-400">{player.salah}</div>
+                        <div className="text-xs text-white/60">Salah</div>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Level */}
-                  <div className="col-span-2 text-center">
-                    <span className="text-white font-bold text-lg">{player.level}</span>
-                  </div>
-
-                  {/* Wrong Answers */}
-                  <div className="col-span-2 text-center">
-                    <span className="text-white/80">{player.salah}</span>
-                  </div>
-
-                  {/* Join Date */}
-                  <div className="col-span-2 text-center">
-                    <span className="text-white/60 text-sm">
-                      {new Date(player.created_at).toLocaleDateString('id-ID', {
-                        month: 'short',
-                        year: 'numeric'
-                      })}
-                    </span>
                   </div>
                 </div>
+
+                {player.id === user.id && (
+                  <div className="mt-4 pt-4 border-t border-purple-400/30">
+                    <div className="flex items-center justify-center text-purple-300">
+                      <Star className="w-4 h-4 mr-2" />
+                      <span className="text-sm font-medium">Ini adalah akun Anda</span>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
-          </div>
-        </div>
 
-        {/* Stats Footer */}
-        <div className="mt-8 bg-white/10 backdrop-blur-md rounded-lg p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div>
-              <div className="text-2xl font-bold text-white">{rankingsData.totalPlayers}</div>
-              <div className="text-white/60">Total Pemain</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">
-                {rankingsData.rankings[0]?.level || 0}
+            {rankings.length === 0 && (
+              <div className="glass-card-enhanced p-12 text-center floating slide-in-up">
+                <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 pulse-glow">
+                  <Trophy className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold rainbow-text mb-3">Belum Ada Peringkat</h3>
+                <p className="text-white/70 text-lg mb-6">Jadilah pemain pertama yang mencapai level tertinggi!</p>
+                <Link href="/dashboard">
+                  <Button variant="gradient" className="btn-hover-lift">
+                    Mulai Bermain Sekarang
+                  </Button>
+                </Link>
               </div>
-              <div className="text-white/60">Level Tertinggi</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">
-                {rankingsData.currentUserRank ? `#${rankingsData.currentUserRank}` : '-'}
-              </div>
-              <div className="text-white/60">Peringkat Anda</div>
-            </div>
+            )}
           </div>
-        </div>
-
-        {/* Back to Dashboard */}
-        <div className="mt-8 text-center">
-          <Link href="/dashboard">
-            <Button size="lg">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Kembali ke Dashboard
-            </Button>
-          </Link>
-        </div>
+        )}
       </div>
     </div>
   )

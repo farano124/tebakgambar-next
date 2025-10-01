@@ -43,7 +43,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={`${poppins.variable} ${inter.variable} ${jakarta.variable} font-sans min-h-screen transition-all duration-500`}>
+      <body className={`${poppins.variable} ${inter.variable} ${jakarta.variable} font-sans min-h-screen transition-all duration-500 relative overflow-x-hidden`}>
+        <div className="particles-bg"></div>
         <ThemeProvider>
           <SoundProvider>
             <AuthProvider>
@@ -59,6 +60,7 @@ export default function RootLayout({
                       border: '1px solid rgba(255, 255, 255, 0.1)',
                       borderRadius: '12px',
                     },
+                    className: 'notification-slide-in',
                   }}
                 />
                 {children}

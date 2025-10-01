@@ -9,7 +9,21 @@ interface RouteParams {
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createServerClient()
+    const supabase = createServerClient({
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setAll(cookiesToSet: any[]) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          cookiesToSet.forEach(({ name, value, options }: any) => {
+            request.cookies.set({ name, value, ...options })
+          })
+        },
+      },
+    })
+
     const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (userError || !user) {
@@ -19,14 +33,14 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       )
     }
 
-    // Check if user is admin
-    const { data: userData, error: userCheckError } = await supabase
+    // Check if current user is admin
+    const { data: currentUserData } = await supabase
       .from('users')
       .select('akses')
       .eq('id', user.id)
       .single()
 
-    if (userCheckError || userData?.akses !== 0) {
+    if (!currentUserData || currentUserData.akses !== 0) {
       return NextResponse.json(
         { error: 'Admin access required' },
         { status: 403 }
@@ -36,7 +50,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const resolvedParams = await params
     const targetUserId = resolvedParams.userId
 
-    // Cannot demote yourself
+    // Prevent demoting yourself
     if (targetUserId === user.id) {
       return NextResponse.json(
         { error: 'Cannot demote yourself' },
@@ -44,29 +58,21 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       )
     }
 
-    // Demote admin to regular user (akses = 1)
-    const { data, error } = await supabase
+    // Demote user to regular user (akses = 1)
+    const { error: demoteError } = await supabase
       .from('users')
-      .update({
-        akses: 1,
-        updated_at: new Date().toISOString()
-      })
+      .update({ akses: 1 })
       .eq('id', targetUserId)
-      .select()
-      .single()
 
-    if (error) {
-      console.error('Error demoting user:', error)
+    if (demoteError) {
+      console.error('Error demoting user:', demoteError)
       return NextResponse.json(
         { error: 'Failed to demote user' },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({
-      message: 'User demoted to regular user successfully',
-      user: data
-    })
+    return NextResponse.json({ success: true })
 
   } catch (error) {
     console.error('API error:', error)

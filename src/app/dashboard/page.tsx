@@ -103,16 +103,16 @@ export default function Dashboard() {
   const progressPercentage = (currentLevel / totalLevels) * 100
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 slide-in-up">
       {/* Header */}
-      <nav className="glass-card p-6 mb-8">
+      <nav className="glass-card-enhanced p-6 mb-8 floating">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+          <div className="flex items-center space-x-4 slide-in-left">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center pulse-glow">
               <User className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold gradient-text font-display">
+              <h1 className="text-3xl font-bold rainbow-text font-display">
                 {userProfile.nama}
               </h1>
               <p className="text-white/80">
@@ -120,10 +120,10 @@ export default function Dashboard() {
               </p>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 slide-in-right">
             <SoundToggle />
             <ThemeToggle />
-            <Button onClick={handleSignOut} variant="danger" size="sm">
+            <Button onClick={handleSignOut} variant="danger" size="sm" className="btn-hover-lift">
               <LogOut className="w-4 h-4 mr-2" />
               Keluar
             </Button>
@@ -134,72 +134,72 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Game Card */}
-        <div className="glass-card p-6 group">
+        <div className="glass-card-enhanced p-6 group card-hover-3d bounce-in" style={{ animationDelay: '0.1s' }}>
           <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
               <Play className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-xl font-bold gradient-text font-display">Main Game</h2>
+            <h2 className="text-xl font-bold rainbow-text font-display">Main Game</h2>
           </div>
           <p className="text-white/80 mb-6">
             Lanjutkan permainan tebak gambar Anda
           </p>
           <Link href="/game">
-            <Button variant="gradient" className="w-full">
+            <Button variant="gradient" className="w-full btn-hover-lift">
               Mulai Bermain
             </Button>
           </Link>
         </div>
 
         {/* Rankings Card */}
-        <div className="glass-card p-6 group">
+        <div className="glass-card-enhanced p-6 group card-hover-3d bounce-in" style={{ animationDelay: '0.2s' }}>
           <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
               <Trophy className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-xl font-bold gradient-text font-display">Peringkat</h2>
+            <h2 className="text-xl font-bold rainbow-text font-display">Peringkat</h2>
           </div>
           <p className="text-white/80 mb-6">
             Lihat peringkat pemain lainnya
           </p>
           <Link href="/rankings">
-            <Button variant="secondary" className="w-full">
+            <Button variant="secondary" className="w-full btn-hover-lift">
               Lihat Peringkat
             </Button>
           </Link>
         </div>
 
         {/* Achievements Card */}
-        <div className="glass-card p-6 group">
+        <div className="glass-card-enhanced p-6 group card-hover-3d bounce-in" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
               <Award className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-xl font-bold gradient-text font-display">Achievements</h2>
+            <h2 className="text-xl font-bold rainbow-text font-display">Achievements</h2>
           </div>
           <p className="text-white/80 mb-6">
             Lihat pencapaian dan badge Anda
           </p>
           <Link href="/achievements">
-            <Button variant="warning" className="w-full">
+            <Button variant="warning" className="w-full btn-hover-lift">
               Lihat Achievements
             </Button>
           </Link>
         </div>
 
         {/* Profile Card */}
-        <div className="glass-card p-6 group">
+        <div className="glass-card-enhanced p-6 group card-hover-3d bounce-in" style={{ animationDelay: '0.4s' }}>
           <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
               <User className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-xl font-bold gradient-text font-display">Profil</h2>
+            <h2 className="text-xl font-bold rainbow-text font-display">Profil</h2>
           </div>
           <p className="text-white/80 mb-6">
             Kelola profil dan pengaturan akun
           </p>
           <Link href="/profile">
-            <Button variant="info" className="w-full">
+            <Button variant="info" className="w-full btn-hover-lift">
               Lihat Profil
             </Button>
           </Link>
@@ -207,18 +207,18 @@ export default function Dashboard() {
 
         {/* Admin Card - Only shown to admins */}
         {isAdmin && (
-          <div className="glass-card p-6 group border border-yellow-400/30">
+          <div className="glass-card-enhanced p-6 group card-hover-3d bounce-in border border-yellow-400/30" style={{ animationDelay: '0.5s' }}>
             <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-red-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-red-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 pulse-glow">
                 <Shield className="w-6 h-6 text-white" />
               </div>
-              <h2 className="text-xl font-bold gradient-text font-display">Admin Panel</h2>
+              <h2 className="text-xl font-bold rainbow-text font-display">Admin Panel</h2>
             </div>
             <p className="text-white/80 mb-6">
               Kelola pengguna dan level permainan
             </p>
             <Link href="/admin">
-              <Button variant="warning" className="w-full">
+              <Button variant="warning" className="w-full btn-hover-lift">
                 Panel Admin
               </Button>
             </Link>
@@ -227,12 +227,12 @@ export default function Dashboard() {
       </div>
 
       {/* Level Selector */}
-      <div className="max-w-4xl mx-auto mt-8">
-        <div className="glass-card p-6 mb-8">
-          <h3 className="text-2xl font-bold gradient-text mb-6 font-display">Pilih Level untuk Bermain</h3>
+      <div className="max-w-4xl mx-auto mt-8 slide-in-up">
+        <div className="glass-card-enhanced p-6 mb-8 floating">
+          <h3 className="text-2xl font-bold rainbow-text mb-6 font-display">Pilih Level untuk Bermain</h3>
           <div className="mb-6">
             <select
-              className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 backdrop-blur-sm"
+              className="input-enhanced w-full px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 backdrop-blur-sm focus-ring"
               onChange={(e) => {
                 const level = parseInt(e.target.value)
                 if (level > 0) {
@@ -256,18 +256,18 @@ export default function Dashboard() {
       </div>
 
       {/* Level Progress */}
-      <div className="max-w-4xl mx-auto">
-        <div className="glass-card p-6">
-          <h3 className="text-2xl font-bold gradient-text mb-6 font-display">Progress Level</h3>
+      <div className="max-w-4xl mx-auto slide-in-up">
+        <div className="glass-card-enhanced p-6 floating">
+          <h3 className="text-2xl font-bold rainbow-text mb-6 font-display">Progress Level</h3>
           <div className="mb-6">
-            <div className="w-full bg-white/10 rounded-full h-4 backdrop-blur-sm">
+            <div className="w-full bg-white/10 rounded-full h-4 backdrop-blur-sm overflow-hidden">
               <div
-                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 h-4 rounded-full transition-all duration-700 shadow-lg"
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 h-4 rounded-full transition-all duration-1000 shadow-lg shimmer"
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
             <p className="text-white/80 text-center mt-4 text-lg">
-              <span className="font-bold text-white">{currentLevel}</span> dari <span className="font-bold gradient-text">{totalLevels}</span> level • <span className="font-bold text-green-400">{progressPercentage.toFixed(1)}%</span> selesai
+              <span className="font-bold text-white">{currentLevel}</span> dari <span className="font-bold rainbow-text">{totalLevels}</span> level • <span className="font-bold text-green-400">{progressPercentage.toFixed(1)}%</span> selesai
             </p>
           </div>
 
@@ -280,13 +280,14 @@ export default function Dashboard() {
               return (
                 <div
                   key={levelNumber}
-                  className={`aspect-square rounded-xl flex items-center justify-center text-white font-bold text-sm cursor-pointer transition-all hover:scale-110 shadow-lg hover:shadow-xl ${
+                  className={`aspect-square rounded-xl flex items-center justify-center text-white font-bold text-sm cursor-pointer transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-xl btn-hover-lift bounce-in ${
                     isLocked
                       ? 'bg-gray-600/50 cursor-not-allowed backdrop-blur-sm border border-gray-500/30'
                       : isCompleted
-                      ? 'bg-gradient-to-br from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 shadow-green-400/30'
+                      ? 'bg-gradient-to-br from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 shadow-green-400/30 pulse-glow'
                       : 'bg-gradient-to-br from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 shadow-yellow-400/30'
                   }`}
+                  style={{ animationDelay: `${i * 0.05}s` }}
                   onClick={() => !isLocked && router.push(`/game/${levelNumber}`)}
                   title={
                     isLocked
@@ -297,7 +298,7 @@ export default function Dashboard() {
                   {isLocked ? (
                     <Lock className="w-5 h-5" />
                   ) : isCompleted ? (
-                    <CheckCircle className="w-5 h-5" />
+                    <CheckCircle className="w-5 h-5 animate-pulse" />
                   ) : (
                     <span className="text-lg">{levelNumber}</span>
                   )}

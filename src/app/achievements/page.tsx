@@ -66,80 +66,95 @@ export default function AchievementsPage() {
   }
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 slide-in-up">
       {/* Header */}
-      <nav className="bg-white/10 backdrop-blur-md rounded-lg p-4 mb-8">
+      <nav className="glass-card-enhanced p-6 mb-8 floating">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 slide-in-left">
             <Link href="/dashboard">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="btn-hover-lift">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali
               </Button>
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-white flex items-center">
-                <Trophy className="w-6 h-6 mr-2 text-yellow-400" />
+              <h1 className="text-3xl font-bold rainbow-text flex items-center font-display">
+                <Trophy className="w-8 h-8 mr-3 text-yellow-400 pulse-glow" />
                 Achievements
               </h1>
-              <p className="text-white/60 text-sm">
+              <p className="text-white/70 text-sm">
                 {unlockedCount} dari {totalAchievements} achievements • {completionPercentage.toFixed(1)}% selesai
               </p>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Star className="w-5 h-5 text-yellow-400" />
-            <span className="text-white font-semibold">{getTotalXP()} XP</span>
+          <div className="flex items-center space-x-3 slide-in-right bg-white/10 rounded-lg px-4 py-2 backdrop-blur-sm">
+            <Star className="w-6 h-6 text-yellow-400 animate-pulse" />
+            <span className="text-white font-bold text-lg">{getTotalXP()} XP</span>
           </div>
         </div>
       </nav>
 
       {/* Stats Overview */}
-      <div className="max-w-6xl mx-auto mb-8">
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-400">{unlockedCount}</div>
-              <div className="text-sm text-white/60">Unlocked</div>
+      <div className="max-w-6xl mx-auto mb-8 slide-in-up">
+        <div className="glass-card-enhanced p-6 floating">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="text-center card-hover-3d bounce-in" style={{ animationDelay: '0.1s' }}>
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 pulse-glow">
+                <Trophy className="w-8 h-8 text-white" />
+              </div>
+              <div className="text-3xl font-bold text-blue-400">{unlockedCount}</div>
+              <div className="text-sm text-white/70 font-medium">Unlocked</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-red-400">{totalAchievements - unlockedCount}</div>
-              <div className="text-sm text-white/60">Locked</div>
+            <div className="text-center card-hover-3d bounce-in" style={{ animationDelay: '0.2s' }}>
+              <div className="w-16 h-16 bg-gradient-to-r from-red-400 to-red-600 rounded-full flex items-center justify-center mx-auto mb-3 pulse-glow">
+                <Star className="w-8 h-8 text-white" />
+              </div>
+              <div className="text-3xl font-bold text-red-400">{totalAchievements - unlockedCount}</div>
+              <div className="text-sm text-white/70 font-medium">Locked</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-400">{completionPercentage.toFixed(1)}%</div>
-              <div className="text-sm text-white/60">Complete</div>
+            <div className="text-center card-hover-3d bounce-in" style={{ animationDelay: '0.3s' }}>
+              <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3 pulse-glow">
+                <div className="text-2xl font-bold text-white">✓</div>
+              </div>
+              <div className="text-3xl font-bold text-green-400">{completionPercentage.toFixed(1)}%</div>
+              <div className="text-sm text-white/70 font-medium">Complete</div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-yellow-400">{getTotalXP()}</div>
-              <div className="text-sm text-white/60">Total XP</div>
+            <div className="text-center card-hover-3d bounce-in" style={{ animationDelay: '0.4s' }}>
+              <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-3 pulse-glow">
+                <div className="text-xl font-bold text-white">XP</div>
+              </div>
+              <div className="text-3xl font-bold text-yellow-400">{getTotalXP()}</div>
+              <div className="text-sm text-white/70 font-medium">Total XP</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="max-w-6xl mx-auto mb-6">
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
+      <div className="max-w-6xl mx-auto mb-6 slide-in-up">
+        <div className="glass-card-enhanced p-6 floating">
           <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-white/60" />
-              <span className="text-white font-medium">Filter:</span>
+            <div className="flex items-center space-x-3 slide-in-left">
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
+                <Filter className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-white font-bold text-lg">Filter Achievements:</span>
             </div>
 
             {/* Status Filter */}
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 slide-in-right">
               {[
                 { value: 'all', label: 'Semua' },
                 { value: 'unlocked', label: 'Unlocked' },
                 { value: 'locked', label: 'Locked' }
-              ].map(option => (
+              ].map((option, index) => (
                 <Button
                   key={option.value}
-                  variant={filter === option.value ? 'primary' : 'outline'}
+                  variant={filter === option.value ? 'gradient' : 'glass'}
                   size="sm"
                   onClick={() => setFilter(option.value as 'all' | 'unlocked' | 'locked')}
-                  className="text-xs"
+                  className="btn-hover-lift bounce-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {option.label}
                 </Button>
@@ -147,16 +162,18 @@ export default function AchievementsPage() {
             </div>
 
             {/* Category Filter */}
-            <div className="flex space-x-2">
-              {categories.map(category => (
+            <div className="flex flex-wrap gap-2 slide-in-up">
+              {categories.map((category, index) => (
                 <Button
                   key={category.value}
-                  variant={categoryFilter === category.value ? 'primary' : 'outline'}
+                  variant={categoryFilter === category.value ? 'gradient' : 'glass'}
                   size="sm"
                   onClick={() => setCategoryFilter(category.value)}
-                  className="text-xs"
+                  className="btn-hover-lift bounce-in"
+                  style={{ animationDelay: `${(index + 3) * 0.1}s` }}
                 >
-                  {category.icon} {category.label}
+                  <span className="mr-2">{category.icon}</span>
+                  {category.label}
                 </Button>
               ))}
             </div>
@@ -183,14 +200,21 @@ export default function AchievementsPage() {
         </div>
 
         {filteredAchievements.length === 0 && (
-          <div className="text-center py-12">
-            <Trophy className="w-16 h-16 text-white/20 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white/60 mb-2">
+          <div className="glass-card-enhanced p-12 text-center slide-in-up">
+            <div className="w-20 h-20 bg-gradient-to-r from-gray-400 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-6 floating">
+              <Trophy className="w-10 h-10 text-white/60" />
+            </div>
+            <h3 className="text-2xl font-bold text-white/70 mb-3 rainbow-text">
               Tidak ada achievements ditemukan
             </h3>
-            <p className="text-white/40">
+            <p className="text-white/50 mb-6 text-lg">
               Coba ubah filter atau lanjutkan bermain untuk unlock achievements!
             </p>
+            <Link href="/dashboard">
+              <Button variant="gradient" className="btn-hover-lift">
+                Kembali ke Dashboard
+              </Button>
+            </Link>
           </div>
         )}
       </div>

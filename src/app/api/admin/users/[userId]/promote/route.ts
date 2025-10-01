@@ -9,7 +9,21 @@ interface RouteParams {
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
-    const supabase = createServerClient()
+    const supabase = createServerClient({
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setAll(cookiesToSet: any[]) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          cookiesToSet.forEach(({ name, value, options }: any) => {
+            request.cookies.set({ name, value, ...options })
+          })
+        },
+      },
+    })
+
     const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (userError || !user) {
@@ -19,14 +33,14 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       )
     }
 
-    // Check if user is admin
-    const { data: userData, error: userCheckError } = await supabase
+    // Check if current user is admin
+    const { data: currentUserData } = await supabase
       .from('users')
       .select('akses')
       .eq('id', user.id)
       .single()
 
-    if (userCheckError || userData?.akses !== 0) {
+    if (!currentUserData || currentUserData.akses !== 0) {
       return NextResponse.json(
         { error: 'Admin access required' },
         { status: 403 }
@@ -37,28 +51,20 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const targetUserId = resolvedParams.userId
 
     // Promote user to admin (akses = 0)
-    const { data, error } = await supabase
+    const { error: promoteError } = await supabase
       .from('users')
-      .update({
-        akses: 0,
-        updated_at: new Date().toISOString()
-      })
+      .update({ akses: 0 })
       .eq('id', targetUserId)
-      .select()
-      .single()
 
-    if (error) {
-      console.error('Error promoting user:', error)
+    if (promoteError) {
+      console.error('Error promoting user:', promoteError)
       return NextResponse.json(
         { error: 'Failed to promote user' },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({
-      message: 'User promoted to admin successfully',
-      user: data
-    })
+    return NextResponse.json({ success: true })
 
   } catch (error) {
     console.error('API error:', error)

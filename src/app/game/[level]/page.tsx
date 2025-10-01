@@ -251,19 +251,19 @@ export default function GamePage() {
   }
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 slide-in-up">
       {/* Header */}
-      <nav className="glass-card p-6 mb-8">
+      <nav className="glass-card-enhanced p-6 mb-8 floating">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 slide-in-left">
             <Link href="/dashboard">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="btn-hover-lift">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold gradient-text font-display">
+              <h1 className="text-3xl font-bold rainbow-text font-display">
                 Level {levelData.level}
               </h1>
               <p className="text-white/70">
@@ -271,8 +271,8 @@ export default function GamePage() {
               </p>
             </div>
           </div>
-          <Link href="/dashboard">
-            <Button variant="glass" size="sm">
+          <Link href="/dashboard" className="slide-in-right">
+            <Button variant="glass" size="sm" className="btn-hover-lift">
               <Home className="w-4 h-4 mr-2" />
               Dashboard
             </Button>
@@ -282,21 +282,21 @@ export default function GamePage() {
 
       {/* Game Content */}
       <div className="max-w-2xl mx-auto">
-        <div className="glass-card p-8">
+        <div className="glass-card-enhanced p-8 floating bounce-in">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold gradient-text mb-6 font-display">
+            <h2 className="text-3xl font-bold rainbow-text mb-6 font-display animate-pulse">
               Tebak Gambar Diatas
             </h2>
 
             {/* Image */}
             <div className="mb-8">
-              <div className="relative max-w-full max-h-64 mx-auto">
+              <div className="relative max-w-full max-h-64 mx-auto card-hover-3d">
                 <Image
                   src={`/api/images/${levelData.level}.jpg`}
                   alt={`Level ${levelData.level} - Tebak Gambar`}
                   width={500}
                   height={300}
-                  className="rounded-lg shadow-lg object-contain"
+                  className="rounded-2xl shadow-2xl object-contain transition-all duration-300 hover:scale-105"
                   priority
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0Rpv6pX6BU6M6l6pWzK2XvfFp3ZfbrD4"
@@ -306,18 +306,19 @@ export default function GamePage() {
                     target.src = '/placeholder-image.jpg'
                   }}
                 />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
               </div>
             </div>
 
             {/* Answer Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 slide-in-up">
               <input
                 type="text"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value.toUpperCase())}
                 onKeyPress={handleKeyPress}
                 placeholder="Ketik jawaban Anda..."
-                className="w-full max-w-md mx-auto px-6 py-4 bg-white/10 border-2 border-white/30 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all text-center text-xl font-bold backdrop-blur-sm shadow-lg"
+                className="input-enhanced w-full max-w-md mx-auto px-6 py-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all text-center text-xl font-bold backdrop-blur-sm shadow-lg focus-ring"
                 autoFocus
                 required
                 disabled={submitting || showResult}
@@ -329,13 +330,21 @@ export default function GamePage() {
                   disabled={submitting || !answer.trim() || showResult}
                   size="lg"
                   variant="gradient"
+                  className="btn-hover-lift pulse-glow"
                 >
-                  {submitting ? 'Mengecek...' : 'TEBAK'}
+                  {submitting ? (
+                    <>
+                      <div className="loading-spinner mr-2"></div>
+                      Mengecek...
+                    </>
+                  ) : (
+                    'TEBAK'
+                  )}
                 </Button>
 
                 {levelData.progress?.completed && (
                   <Link href={`/game/${parseInt(levelParam) + 1}`}>
-                    <Button variant="success" size="lg">
+                    <Button variant="success" size="lg" className="btn-hover-lift">
                       <Trophy className="w-5 h-5 mr-2" />
                       Level Berikutnya
                     </Button>
@@ -360,17 +369,17 @@ export default function GamePage() {
             )}
 
             {/* Keyboard Shortcuts Help */}
-            <div className="mt-6 text-center space-x-6">
-              <span className="inline-flex items-center bg-white/10 px-3 py-2 rounded-lg backdrop-blur-sm">
+            <div className="mt-6 text-center space-x-6 slide-in-up">
+              <span className="inline-flex items-center glass-card-enhanced px-3 py-2 rounded-lg hover:scale-105 transition-transform duration-200">
                 <Keyboard className="w-4 h-4 mr-2 text-purple-400" />
                 <kbd className="px-2 py-1 bg-purple-500/20 rounded text-sm font-semibold text-purple-300">Space</kbd>
                 <span className="ml-2 text-white/80 text-sm">Hint</span>
               </span>
-              <span className="inline-flex items-center bg-white/10 px-3 py-2 rounded-lg backdrop-blur-sm">
+              <span className="inline-flex items-center glass-card-enhanced px-3 py-2 rounded-lg hover:scale-105 transition-transform duration-200">
                 <kbd className="px-2 py-1 bg-green-500/20 rounded text-sm font-semibold text-green-300">Enter</kbd>
                 <span className="ml-2 text-white/80 text-sm">Submit</span>
               </span>
-              <span className="inline-flex items-center bg-white/10 px-3 py-2 rounded-lg backdrop-blur-sm">
+              <span className="inline-flex items-center glass-card-enhanced px-3 py-2 rounded-lg hover:scale-105 transition-transform duration-200">
                 <kbd className="px-2 py-1 bg-blue-500/20 rounded text-sm font-semibold text-blue-300">←→</kbd>
                 <span className="ml-2 text-white/80 text-sm">Navigate</span>
               </span>
@@ -382,25 +391,25 @@ export default function GamePage() {
       {/* Result Modal */}
       {showResult && lastResult && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="glass-card p-8 max-w-md w-full text-center rounded-2xl shadow-2xl border-2 border-white/20">
+          <div className="glass-card-enhanced p-8 max-w-md w-full text-center rounded-2xl shadow-2xl border-2 border-white/20 bounce-in">
             <div className="mb-6">
               {lastResult.correct ? (
-                <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-lg animate-pulse">
-                  <CheckCircle className="w-10 h-10 text-white" />
+                <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-lg pulse-glow floating">
+                  <CheckCircle className="w-10 h-10 text-white animate-bounce" />
                 </div>
               ) : (
-                <div className="w-20 h-20 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center mx-auto shadow-lg animate-pulse">
                   <XCircle className="w-10 h-10 text-white" />
                 </div>
               )}
             </div>
 
-            <h3 className="text-2xl font-bold mb-4 gradient-text">
+            <h3 className="text-2xl font-bold mb-4 rainbow-text">
               {lastResult.correct ? 'Selamat! 🎉' : 'Belum Beruntung 😅'}
             </h3>
 
             {lastResult.correct && lastResult.answer && (
-              <div className="mb-6 text-left bg-white/5 rounded-xl p-4">
+              <div className="mb-6 text-left bg-white/5 rounded-xl p-4 slide-in-up">
                 <p className="font-bold text-purple-300 mb-2">Makna:</p>
                 <p className="text-white/90 mb-4 leading-relaxed">{lastResult.answer.makna}</p>
                 <p className="font-bold text-purple-300 mb-2">Peribahasa:</p>
@@ -408,7 +417,7 @@ export default function GamePage() {
               </div>
             )}
 
-            <div className="bg-white/10 rounded-lg p-3 mb-6">
+            <div className="bg-white/10 rounded-lg p-3 mb-6 slide-in-up">
               <p className="text-white/80">
                 <span className="font-bold text-purple-300">Percobaan:</span> {lastResult.attempts}
               </p>
@@ -417,7 +426,7 @@ export default function GamePage() {
             <Button
               onClick={() => setShowResult(false)}
               variant={lastResult.correct ? "success" : "warning"}
-              className="w-full"
+              className="w-full btn-hover-lift"
             >
               {lastResult.correct ? 'Lanjutkan' : 'Coba Lagi'}
             </Button>

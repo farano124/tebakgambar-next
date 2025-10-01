@@ -151,20 +151,25 @@ export default function ProfilePage() {
   })
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 slide-in-up">
       {/* Header */}
-      <nav className="glass-card p-6 mb-8">
+      <nav className="glass-card-enhanced p-6 mb-8 floating">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 slide-in-left">
             <Link href="/dashboard">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="btn-hover-lift">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold gradient-text font-display">Profil Pengguna</h1>
+              <h1 className="text-4xl font-bold rainbow-text font-display">Profil Pengguna</h1>
               <p className="text-white/70">Kelola informasi akun Anda</p>
+            </div>
+          </div>
+          <div className="slide-in-right">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center pulse-glow">
+              <User className="w-6 h-6 text-white" />
             </div>
           </div>
         </div>
@@ -174,14 +179,14 @@ export default function ProfilePage() {
         {/* Profile Info Card */}
         <div className="lg:col-span-2 space-y-6">
           {/* Basic Info */}
-          <div className="glass-card p-6">
+          <div className="glass-card-enhanced p-6 floating bounce-in">
             <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+              <div className="flex items-center space-x-3 slide-in-left">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center pulse-glow">
                   <User className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold gradient-text">Informasi Dasar</h2>
+                  <h2 className="text-xl font-bold rainbow-text">Informasi Dasar</h2>
                   <p className="text-white/70 text-sm">Data pribadi Anda</p>
                 </div>
               </div>
@@ -191,6 +196,7 @@ export default function ProfilePage() {
                   onClick={() => setIsEditing(true)}
                   variant="outline"
                   size="sm"
+                  className="btn-hover-lift slide-in-right"
                 >
                   <Edit className="w-4 h-4 mr-2" />
                   Edit
@@ -207,7 +213,7 @@ export default function ProfilePage() {
                       type="text"
                       value={editForm.nama}
                       onChange={(e) => setEditForm(prev => ({ ...prev, nama: e.target.value }))}
-                      className="w-full px-4 py-3 bg-white/10 border-2 border-white/30 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
+                      className="input-enhanced w-full px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 focus-ring"
                       maxLength={100}
                     />
                   ) : (
@@ -222,7 +228,7 @@ export default function ProfilePage() {
                       type="text"
                       value={editForm.username}
                       onChange={(e) => setEditForm(prev => ({ ...prev, username: e.target.value }))}
-                      className="w-full px-4 py-3 bg-white/10 border-2 border-white/30 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
+                      className="input-enhanced w-full px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 focus-ring"
                       maxLength={50}
                     />
                   ) : (
@@ -293,32 +299,38 @@ export default function ProfilePage() {
         {/* Stats Sidebar */}
         <div className="space-y-6">
           {/* Game Stats */}
-          <div className="glass-card p-6">
-            <h3 className="text-xl font-bold gradient-text mb-4 flex items-center">
-              <Trophy className="w-5 h-5 mr-2" />
+          <div className="glass-card-enhanced p-6 floating bounce-in" style={{ animationDelay: '0.3s' }}>
+            <h3 className="text-xl font-bold rainbow-text mb-4 flex items-center">
+              <Trophy className="w-6 h-6 mr-2 pulse-glow" />
               Statistik Game
             </h3>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/15 transition-colors card-hover-3d">
                 <div className="flex items-center space-x-3">
-                  <Target className="w-5 h-5 text-green-400" />
+                  <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                    <Target className="w-4 h-4 text-white" />
+                  </div>
                   <span className="text-white/80">Level Saat Ini</span>
                 </div>
-                <span className="text-2xl font-bold gradient-text">{userProfile.level}</span>
+                <span className="text-2xl font-bold rainbow-text">{userProfile.level}</span>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/15 transition-colors card-hover-3d">
                 <div className="flex items-center space-x-3">
-                  <Clock className="w-5 h-5 text-blue-400" />
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                    <Clock className="w-4 h-4 text-white" />
+                  </div>
                   <span className="text-white/80">Total Kesalahan</span>
                 </div>
                 <span className="text-xl font-bold text-red-400">{userProfile.salah}</span>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/15 transition-colors card-hover-3d">
                 <div className="flex items-center space-x-3">
-                  <Award className="w-5 h-5 text-purple-400" />
+                  <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                    <Award className="w-4 h-4 text-white" />
+                  </div>
                   <span className="text-white/80">Progress</span>
                 </div>
                 <span className="text-lg font-bold text-yellow-400">
@@ -329,27 +341,27 @@ export default function ProfilePage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="glass-card p-6">
-            <h3 className="text-xl font-bold gradient-text mb-4">Aksi Cepat</h3>
+          <div className="glass-card-enhanced p-6 floating bounce-in" style={{ animationDelay: '0.4s' }}>
+            <h3 className="text-xl font-bold rainbow-text mb-4">Aksi Cepat</h3>
 
             <div className="space-y-3">
               <Link href="/game">
-                <Button variant="gradient" className="w-full">
-                  <Trophy className="w-4 h-4 mr-2" />
+                <Button variant="gradient" className="w-full btn-hover-lift pulse-glow">
+                  <Trophy className="w-5 h-5 mr-2" />
                   Main Game
                 </Button>
               </Link>
 
               <Link href="/achievements">
-                <Button variant="warning" className="w-full">
-                  <Award className="w-4 h-4 mr-2" />
+                <Button variant="warning" className="w-full btn-hover-lift">
+                  <Award className="w-5 h-5 mr-2" />
                   Lihat Achievements
                 </Button>
               </Link>
 
               <Link href="/rankings">
-                <Button variant="secondary" className="w-full">
-                  <Target className="w-4 h-4 mr-2" />
+                <Button variant="secondary" className="w-full btn-hover-lift">
+                  <Target className="w-5 h-5 mr-2" />
                   Lihat Ranking
                 </Button>
               </Link>
