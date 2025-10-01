@@ -43,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={`${poppins.variable} ${inter.variable} ${jakarta.variable} font-sans bg-gradient-to-br from-blue-500 to-purple-600 dark:from-gray-900 dark:to-gray-800 min-h-screen transition-colors`}>
+      <body className={`${poppins.variable} ${inter.variable} ${jakarta.variable} font-sans min-h-screen transition-all duration-500`}>
         <ThemeProvider>
           <SoundProvider>
             <AuthProvider>
@@ -53,8 +53,11 @@ export default function RootLayout({
                   toastOptions={{
                     duration: 4000,
                     style: {
-                      background: '#363636',
+                      background: 'rgba(0, 0, 0, 0.8)',
                       color: '#fff',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '12px',
                     },
                   }}
                 />

@@ -105,15 +105,17 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen p-4">
       {/* Header */}
-      <nav className="bg-white/10 backdrop-blur-md rounded-lg p-4 mb-8">
+      <nav className="glass-card p-6 mb-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <User className="w-8 h-8 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+              <User className="w-6 h-6 text-white" />
+            </div>
             <div>
-              <h1 className="text-2xl font-bold text-white font-display">
+              <h1 className="text-3xl font-bold gradient-text font-display">
                 {userProfile.nama}
               </h1>
-              <p className="text-body-sm text-white/60">
+              <p className="text-white/80">
                 Level {currentLevel} • {userProfile.salah} kesalahan total
               </p>
             </div>
@@ -132,64 +134,72 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Game Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 hover:bg-white/20 transition-colors">
+        <div className="glass-card p-6 group">
           <div className="flex items-center mb-4">
-            <Play className="w-8 h-8 text-green-400 mr-3" />
-            <h2 className="text-xl font-bold text-white font-display">Main Game</h2>
+            <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+              <Play className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-xl font-bold gradient-text font-display">Main Game</h2>
           </div>
-          <p className="text-body-sm text-white/80 mb-4">
+          <p className="text-white/80 mb-6">
             Lanjutkan permainan tebak gambar Anda
           </p>
           <Link href="/game">
-            <Button className="w-full">
+            <Button variant="gradient" className="w-full">
               Mulai Bermain
             </Button>
           </Link>
         </div>
 
         {/* Rankings Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 hover:bg-white/20 transition-colors">
+        <div className="glass-card p-6 group">
           <div className="flex items-center mb-4">
-            <Trophy className="w-8 h-8 text-yellow-400 mr-3" />
-            <h2 className="text-xl font-bold text-white font-display">Peringkat</h2>
+            <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+              <Trophy className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-xl font-bold gradient-text font-display">Peringkat</h2>
           </div>
-          <p className="text-body-sm text-white/80 mb-4">
+          <p className="text-white/80 mb-6">
             Lihat peringkat pemain lainnya
           </p>
           <Link href="/rankings">
-            <Button variant="outline" className="w-full">
+            <Button variant="secondary" className="w-full">
               Lihat Peringkat
             </Button>
           </Link>
         </div>
 
         {/* Achievements Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 hover:bg-white/20 transition-colors">
+        <div className="glass-card p-6 group">
           <div className="flex items-center mb-4">
-            <Award className="w-8 h-8 text-purple-400 mr-3" />
-            <h2 className="text-xl font-bold text-white font-display">Achievements</h2>
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+              <Award className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-xl font-bold gradient-text font-display">Achievements</h2>
           </div>
-          <p className="text-body-sm text-white/80 mb-4">
+          <p className="text-white/80 mb-6">
             Lihat pencapaian dan badge Anda
           </p>
           <Link href="/achievements">
-            <Button variant="outline" className="w-full">
+            <Button variant="warning" className="w-full">
               Lihat Achievements
             </Button>
           </Link>
         </div>
 
         {/* Profile Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 hover:bg-white/20 transition-colors">
+        <div className="glass-card p-6 group">
           <div className="flex items-center mb-4">
-            <User className="w-8 h-8 text-blue-400 mr-3" />
-            <h2 className="text-xl font-bold text-white">Profil</h2>
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+              <User className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-xl font-bold gradient-text font-display">Profil</h2>
           </div>
-          <p className="text-white/80 mb-4">
+          <p className="text-white/80 mb-6">
             Kelola profil dan pengaturan akun
           </p>
           <Link href="/profile">
-            <Button variant="outline" className="w-full">
+            <Button variant="info" className="w-full">
               Lihat Profil
             </Button>
           </Link>
@@ -197,16 +207,18 @@ export default function Dashboard() {
 
         {/* Admin Card - Only shown to admins */}
         {isAdmin && (
-          <div className="bg-gradient-to-br from-yellow-500/20 to-red-500/20 backdrop-blur-md rounded-lg p-6 hover:from-yellow-500/30 hover:to-red-500/30 transition-all border border-yellow-400/30">
+          <div className="glass-card p-6 group border border-yellow-400/30">
             <div className="flex items-center mb-4">
-              <Shield className="w-8 h-8 text-yellow-400 mr-3" />
-              <h2 className="text-xl font-bold text-white">Admin Panel</h2>
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-red-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-xl font-bold gradient-text font-display">Admin Panel</h2>
             </div>
-            <p className="text-white/80 mb-4">
+            <p className="text-white/80 mb-6">
               Kelola pengguna dan level permainan
             </p>
             <Link href="/admin">
-              <Button className="w-full bg-yellow-600 hover:bg-yellow-700">
+              <Button variant="warning" className="w-full">
                 Panel Admin
               </Button>
             </Link>
@@ -216,11 +228,11 @@ export default function Dashboard() {
 
       {/* Level Selector */}
       <div className="max-w-4xl mx-auto mt-8">
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 mb-8">
-          <h3 className="text-lg font-bold text-white mb-4">Pilih Level untuk Bermain</h3>
-          <div className="mb-4">
+        <div className="glass-card p-6 mb-8">
+          <h3 className="text-2xl font-bold gradient-text mb-6 font-display">Pilih Level untuk Bermain</h3>
+          <div className="mb-6">
             <select
-              className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50"
+              className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 backdrop-blur-sm"
               onChange={(e) => {
                 const level = parseInt(e.target.value)
                 if (level > 0) {
@@ -237,7 +249,7 @@ export default function Dashboard() {
               ))}
             </select>
           </div>
-          <p className="text-white/60 text-sm">
+          <p className="text-white/70 text-sm">
             Anda dapat memainkan level 1 sampai level {currentLevel}
           </p>
         </div>
@@ -245,21 +257,21 @@ export default function Dashboard() {
 
       {/* Level Progress */}
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
-          <h3 className="text-lg font-bold text-white mb-4">Progress Level</h3>
-          <div className="mb-4">
-            <div className="w-full bg-white/20 rounded-full h-3">
+        <div className="glass-card p-6">
+          <h3 className="text-2xl font-bold gradient-text mb-6 font-display">Progress Level</h3>
+          <div className="mb-6">
+            <div className="w-full bg-white/10 rounded-full h-4 backdrop-blur-sm">
               <div
-                className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 h-4 rounded-full transition-all duration-700 shadow-lg"
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
-            <p className="text-white/60 text-sm text-center mt-2">
-              {currentLevel} dari {totalLevels} level • {progressPercentage.toFixed(1)}% selesai
+            <p className="text-white/80 text-center mt-4 text-lg">
+              <span className="font-bold text-white">{currentLevel}</span> dari <span className="font-bold gradient-text">{totalLevels}</span> level • <span className="font-bold text-green-400">{progressPercentage.toFixed(1)}%</span> selesai
             </p>
           </div>
 
-          <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
+          <div className="grid grid-cols-5 md:grid-cols-10 gap-3">
             {Array.from({ length: Math.min(currentLevel + 5, 50) }, (_, i) => {
               const levelNumber = i + 1
               const isCompleted = levelNumber <= currentLevel
@@ -268,12 +280,12 @@ export default function Dashboard() {
               return (
                 <div
                   key={levelNumber}
-                  className={`aspect-square rounded-lg flex items-center justify-center text-white font-bold text-sm cursor-pointer transition-all hover:scale-105 ${
+                  className={`aspect-square rounded-xl flex items-center justify-center text-white font-bold text-sm cursor-pointer transition-all hover:scale-110 shadow-lg hover:shadow-xl ${
                     isLocked
-                      ? 'bg-gray-500 cursor-not-allowed'
+                      ? 'bg-gray-600/50 cursor-not-allowed backdrop-blur-sm border border-gray-500/30'
                       : isCompleted
-                      ? 'bg-green-500 hover:bg-green-600'
-                      : 'bg-yellow-500 hover:bg-yellow-600'
+                      ? 'bg-gradient-to-br from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 shadow-green-400/30'
+                      : 'bg-gradient-to-br from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 shadow-yellow-400/30'
                   }`}
                   onClick={() => !isLocked && router.push(`/game/${levelNumber}`)}
                   title={
@@ -283,11 +295,11 @@ export default function Dashboard() {
                   }
                 >
                   {isLocked ? (
-                    <Lock className="w-4 h-4" />
+                    <Lock className="w-5 h-5" />
                   ) : isCompleted ? (
-                    <CheckCircle className="w-4 h-4" />
+                    <CheckCircle className="w-5 h-5" />
                   ) : (
-                    levelNumber
+                    <span className="text-lg">{levelNumber}</span>
                   )}
                 </div>
               )

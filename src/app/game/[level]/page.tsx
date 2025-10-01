@@ -251,7 +251,7 @@ export default function GamePage() {
   return (
     <div className="min-h-screen p-4">
       {/* Header */}
-      <nav className="bg-white/10 backdrop-blur-md rounded-lg p-4 mb-8">
+      <nav className="glass-card p-6 mb-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <Link href="/dashboard">
@@ -261,16 +261,16 @@ export default function GamePage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-xl font-bold text-white font-display">
+              <h1 className="text-3xl font-bold gradient-text font-display">
                 Level {levelData.level}
               </h1>
-              <p className="text-body-xs text-white/60">
+              <p className="text-white/70">
                 {levelData.progress?.attempts || 0} percobaan
               </p>
             </div>
           </div>
           <Link href="/dashboard">
-            <Button variant="outline" size="sm">
+            <Button variant="glass" size="sm">
               <Home className="w-4 h-4 mr-2" />
               Dashboard
             </Button>
@@ -280,9 +280,9 @@ export default function GamePage() {
 
       {/* Game Content */}
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-8">
+        <div className="glass-card p-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4 font-display">
+            <h2 className="text-3xl font-bold gradient-text mb-6 font-display">
               Tebak Gambar Diatas
             </h2>
 
@@ -308,32 +308,33 @@ export default function GamePage() {
             </div>
 
             {/* Answer Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <input
                 type="text"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value.toUpperCase())}
                 onKeyPress={handleKeyPress}
                 placeholder="Ketik jawaban Anda..."
-                className="w-full max-w-md mx-auto px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 transition-all text-center text-lg font-semibold"
+                className="w-full max-w-md mx-auto px-6 py-4 bg-white/10 border-2 border-white/30 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all text-center text-xl font-bold backdrop-blur-sm shadow-lg"
                 autoFocus
                 required
                 disabled={submitting || showResult}
               />
 
-              <div className="flex justify-center space-x-4">
+              <div className="flex justify-center space-x-6">
                 <Button
                   type="submit"
                   disabled={submitting || !answer.trim() || showResult}
                   size="lg"
+                  variant="gradient"
                 >
                   {submitting ? 'Mengecek...' : 'TEBAK'}
                 </Button>
 
                 {levelData.progress?.completed && (
                   <Link href={`/game/${parseInt(levelParam) + 1}`}>
-                    <Button variant="outline" size="lg">
-                      <Trophy className="w-4 h-4 mr-2" />
+                    <Button variant="success" size="lg">
+                      <Trophy className="w-5 h-5 mr-2" />
                       Level Berikutnya
                     </Button>
                   </Link>
@@ -357,16 +358,19 @@ export default function GamePage() {
             )}
 
             {/* Keyboard Shortcuts Help */}
-            <div className="mt-4 text-center text-xs text-white/60 space-x-4">
-              <span className="inline-flex items-center">
-                <Keyboard className="w-3 h-3 mr-1" />
-                <kbd className="px-1 py-0.5 bg-white/10 rounded text-xs">Space</kbd> Hint
+            <div className="mt-6 text-center space-x-6">
+              <span className="inline-flex items-center bg-white/10 px-3 py-2 rounded-lg backdrop-blur-sm">
+                <Keyboard className="w-4 h-4 mr-2 text-purple-400" />
+                <kbd className="px-2 py-1 bg-purple-500/20 rounded text-sm font-semibold text-purple-300">Space</kbd>
+                <span className="ml-2 text-white/80 text-sm">Hint</span>
               </span>
-              <span className="inline-flex items-center">
-                <kbd className="px-1 py-0.5 bg-white/10 rounded text-xs">Enter</kbd> Submit
+              <span className="inline-flex items-center bg-white/10 px-3 py-2 rounded-lg backdrop-blur-sm">
+                <kbd className="px-2 py-1 bg-green-500/20 rounded text-sm font-semibold text-green-300">Enter</kbd>
+                <span className="ml-2 text-white/80 text-sm">Submit</span>
               </span>
-              <span className="inline-flex items-center">
-                <kbd className="px-1 py-0.5 bg-white/10 rounded text-xs">←→</kbd> Navigate
+              <span className="inline-flex items-center bg-white/10 px-3 py-2 rounded-lg backdrop-blur-sm">
+                <kbd className="px-2 py-1 bg-blue-500/20 rounded text-sm font-semibold text-blue-300">←→</kbd>
+                <span className="ml-2 text-white/80 text-sm">Navigate</span>
               </span>
             </div>
           </div>
@@ -375,35 +379,42 @@ export default function GamePage() {
 
       {/* Result Modal */}
       {showResult && lastResult && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
-            <div className="mb-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="glass-card p-8 max-w-md w-full text-center rounded-2xl shadow-2xl border-2 border-white/20">
+            <div className="mb-6">
               {lastResult.correct ? (
-                <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
+                <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto shadow-lg animate-pulse">
+                  <CheckCircle className="w-10 h-10 text-white" />
+                </div>
               ) : (
-                <XCircle className="w-16 h-16 text-red-500 mx-auto" />
+                <div className="w-20 h-20 bg-gradient-to-r from-red-400 to-pink-500 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                  <XCircle className="w-10 h-10 text-white" />
+                </div>
               )}
             </div>
 
-            <h3 className="text-xl font-bold mb-2">
+            <h3 className="text-2xl font-bold mb-4 gradient-text">
               {lastResult.correct ? 'Selamat! 🎉' : 'Belum Beruntung 😅'}
             </h3>
 
             {lastResult.correct && lastResult.answer && (
-              <div className="mb-4 text-left">
-                <p className="font-semibold">Makna:</p>
-                <p className="text-gray-600 mb-2">{lastResult.answer.makna}</p>
-                <p className="font-semibold">Peribahasa:</p>
-                <p className="text-gray-600">{lastResult.answer.peribahasa}</p>
+              <div className="mb-6 text-left bg-white/5 rounded-xl p-4">
+                <p className="font-bold text-purple-300 mb-2">Makna:</p>
+                <p className="text-white/90 mb-4 leading-relaxed">{lastResult.answer.makna}</p>
+                <p className="font-bold text-purple-300 mb-2">Peribahasa:</p>
+                <p className="text-white/90 font-medium italic">&ldquo;{lastResult.answer.peribahasa}&rdquo;</p>
               </div>
             )}
 
-            <p className="text-gray-600 mb-4">
-              Percobaan: {lastResult.attempts}
-            </p>
+            <div className="bg-white/10 rounded-lg p-3 mb-6">
+              <p className="text-white/80">
+                <span className="font-bold text-purple-300">Percobaan:</span> {lastResult.attempts}
+              </p>
+            </div>
 
             <Button
               onClick={() => setShowResult(false)}
+              variant={lastResult.correct ? "success" : "warning"}
               className="w-full"
             >
               {lastResult.correct ? 'Lanjutkan' : 'Coba Lagi'}
