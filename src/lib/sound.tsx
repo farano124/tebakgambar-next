@@ -65,7 +65,9 @@ export function SoundProvider({ children }: SoundProviderProps) {
   }, [soundEnabled])
 
   const playSound = useCallback(async (sound: SoundType) => {
-    if (!soundEnabled) return
+    if (!soundEnabled) {
+      return
+    }
 
     try {
       const soundPath = SOUND_FILES[sound]
@@ -86,6 +88,10 @@ export function SoundProvider({ children }: SoundProviderProps) {
       // Reset audio to beginning and play
       audio.currentTime = 0
       audio.volume = getVolumeForSound(sound)
+
+      if (sound === 'backgroundMusic') {
+        audio.loop = true // Background music should loop
+      }
 
       const playPromise = audio.play()
 
@@ -115,6 +121,15 @@ export function SoundProvider({ children }: SoundProviderProps) {
     })
   }, [])
 
+  // Auto-play background music when sound is enabled
+  useEffect(() => {
+    if (soundEnabled) {
+      playSound('backgroundMusic')
+    } else {
+      stopAllSounds()
+    }
+  }, [soundEnabled, playSound, stopAllSounds])
+
   const value: SoundContextType = {
     soundEnabled,
     toggleSound,
@@ -143,7 +158,7 @@ function getVolumeForSound(sound: SoundType): number {
     case 'notification':
       return 0.4 // Notification sounds
     case 'backgroundMusic':
-      return 0.2 // Background music (lower volume)
+      return 0.4 // Background music (reasonable volume)
     default:
       return 0.4
   }
@@ -158,7 +173,7 @@ export function preloadSounds() {
     if (soundPath) {
       const audio = new Audio(soundPath)
       audio.preload = 'auto'
-      audio.volume = 0.01 // Very low volume for preloading
+      audio.volume = 0.1 // Very low volume for preloading
       audioCache.set(soundPath, audio)
     }
   })
