@@ -80,9 +80,14 @@ export default function LoginPage() {
             </div>
 
             <div className="slide-in-right">
-              <label className="block text-sm font-medium text-white/80 mb-2">
-                Password
-              </label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium text-white/80">
+                  Password
+                </label>
+                <Link href="/forgot-password" className="text-sm text-purple-400 hover:text-purple-300 font-medium transition-colors duration-200">
+                  Lupa Password?
+                </Link>
+              </div>
               <input
                 type="password"
                 value={password}

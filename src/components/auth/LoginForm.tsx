@@ -87,6 +87,11 @@ export const LoginForm = memo(function LoginForm() {
 
         <div className="mt-6 text-center space-y-2">
           <p className="text-white/80">
+            <Link href="/forgot-password" className="text-white hover:underline font-semibold hover:text-purple-300 transition-colors duration-200">
+              Lupa Password?
+            </Link>
+          </p>
+          <p className="text-white/80">
             Belum punya akun?{' '}
             <Link href="/register" className="text-white hover:underline font-semibold">
               Daftar di sini

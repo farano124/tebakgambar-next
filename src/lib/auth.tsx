@@ -42,7 +42,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: string, session: Session | null) => {
-        console.log('Auth state changed:', event, session?.user?.email)
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
@@ -50,8 +49,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Handle auth state changes
         if (event === 'SIGNED_IN' && !hasHandledSignIn) {
           setHasHandledSignIn(true)
-          toast.success('Berhasil masuk!')
-          router.push('/dashboard')
+
+          // Check if this is a recovery session
+          const isRecoverySession = window.location.pathname === '/reset-password' || window.location.hash.includes('type=recovery')
+
+          if (!isRecoverySession) {
+            toast.success('Berhasil masuk!')
+            router.push('/dashboard')
+          }
+          // For recovery sessions, stay on the reset-password page
         } else if (event === 'SIGNED_OUT') {
           setHasHandledSignIn(false)
           toast.success('Berhasil keluar')
