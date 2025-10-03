@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { SoundToggle } from '@/components/ui/SoundToggle'
 import Link from 'next/link'
-import { LogOut, User, Trophy, Play, CheckCircle, Lock, Shield, Award } from 'lucide-react'
+import { LogOut, User, Trophy, Play, CheckCircle, Shield, Award } from 'lucide-react'
 
 interface UserProfile {
   id: string
@@ -240,90 +240,87 @@ export default function Dashboard() {
       <div className="max-w-4xl mx-auto mt-8 slide-in-up">
         <div className="glass-card-enhanced p-6 mb-8 floating">
           <h3 className="text-2xl font-bold rainbow-text mb-6 font-display">Pilih Level untuk Bermain</h3>
-          <div className="mb-6">
-            <select
-              className="input-enhanced w-full px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 backdrop-blur-sm focus-ring"
-              onChange={(e) => {
-                const level = parseInt(e.target.value)
-                if (level > 0) {
-                  router.push(`/game/${level}`)
-                }
-              }}
-              defaultValue=""
-            >
-              <option value="" disabled>Pilih level...</option>
-              {Array.from({ length: currentLevel }, (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  Level {i + 1}
-                </option>
-              ))}
-            </select>
-          </div>
-          <p className="text-white/70 text-sm">
-            Anda dapat memainkan level 1 sampai level {currentLevel}
-          </p>
-        </div>
-      </div>
-
-      {/* Level Progress */}
-      <div className="max-w-4xl mx-auto slide-in-up">
-        <div className="glass-card-enhanced p-6 floating">
-          <h3 className="text-2xl font-bold rainbow-text mb-6 font-display">Progress Level</h3>
-          <div className="mb-6">
-            <div className="w-full bg-white/10 rounded-full h-4 backdrop-blur-sm overflow-hidden">
+          <div className="mb-4">
+            <div className="w-full bg-white/10 rounded-full h-3 backdrop-blur-sm overflow-hidden">
               <div
-                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 h-4 rounded-full transition-all duration-1000 shadow-lg shimmer"
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 h-3 rounded-full transition-all duration-700 shadow-lg shimmer"
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
-            <p className="text-white/80 text-center mt-4 text-lg">
+            <p className="text-white/70 text-sm mt-2 text-center">
               <span className="font-bold text-white">{currentLevel}</span> dari <span className="font-bold rainbow-text">{totalLevels}</span> level • <span className="font-bold text-green-400">{progressPercentage.toFixed(1)}%</span> selesai
             </p>
           </div>
-
-          <div className="grid grid-cols-5 md:grid-cols-10 gap-3">
-            {Array.from({ length: Math.min(currentLevel + 5, 50) }, (_, i) => {
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-3">
+            {Array.from({ length: totalLevels }, (_, i) => {
               const levelNumber = i + 1
-              const isCompleted = levelNumber <= currentLevel
-              const isLocked = levelNumber > currentLevel
-
+              const canPlay = levelNumber <= currentLevel
+              const isCurrent = levelNumber === currentLevel
+              const isCompleted = levelNumber < currentLevel
               return (
-                <div
+                <button
                   key={levelNumber}
-                  className={`aspect-square rounded-xl flex items-center justify-center text-white font-bold text-sm cursor-pointer transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-xl btn-hover-lift bounce-in ${
-                    isLocked
-                      ? 'bg-gray-600/50 cursor-not-allowed backdrop-blur-sm border border-gray-500/30'
-                      : isCompleted
-                      ? 'bg-gradient-to-br from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 shadow-green-400/30 pulse-glow'
-                      : 'bg-gradient-to-br from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 shadow-yellow-400/30'
-                  }`}
-                  style={{ animationDelay: `${i * 0.05}s` }}
-                  onClick={() => !isLocked && router.push(`/game/${levelNumber}`)}
+                  onClick={() => canPlay && router.push(`/game/${levelNumber}`)}
+                  disabled={!canPlay}
+                  className={[
+                    'group relative aspect-square rounded-xl flex items-center justify-center font-extrabold text-sm transition-all duration-300 shadow-lg btn-hover-lift overflow-hidden',
+                    canPlay
+                      ? (isCurrent
+                        ? 'bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-600 text-white ring-2 ring-emerald-300/60 pulse-glow hover:scale-105'
+                        : 'bg-gradient-to-br from-green-500 to-emerald-600 text-white hover:scale-105')
+                      : 'bg-gray-600/50 text-white/60 cursor-not-allowed border border-gray-500/30 backdrop-blur-sm',
+                  ].join(' ')}
                   title={
-                    isLocked
-                      ? `Level ${levelNumber} belum terbuka`
-                      : `Main Level ${levelNumber}`
+                    canPlay
+                      ? (isCurrent ? `Main Level ${levelNumber} (terbaru)` : `Main Level ${levelNumber}`)
+                      : `Level ${levelNumber} belum terbuka`
                   }
+                  aria-label={`Level ${levelNumber} ${canPlay ? (isCurrent ? 'level terbaru' : 'tersedia') : 'terkunci'}`}
                 >
-                  {isLocked ? (
-                    <Lock className="w-5 h-5" />
-                  ) : isCompleted ? (
-                    <CheckCircle className="w-5 h-5 animate-pulse" />
-                  ) : (
-                    <span className="text-lg">{levelNumber}</span>
+                  {/* Shine effect */}
+                  {canPlay && (
+                    <span className="pointer-events-none absolute -inset-1 opacity-0 group-hover:opacity-30 transition-opacity duration-500">
+                      <span className="absolute -inset-1 bg-gradient-to-r from-white/20 to-transparent rotate-45 -translate-x-[120%] group-hover:translate-x-[120%] transition-transform duration-700 ease-out" />
+                    </span>
                   )}
-                </div>
+
+                  {/* Corner badges */}
+                  {isCurrent && (
+                    <span className="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-500 text-white shadow-md uppercase tracking-wider">
+                      Next
+                    </span>
+                  )}
+                  {isCompleted && (
+                    <span className="absolute top-1 left-1 text-emerald-200/90">
+                      <CheckCircle className="w-4 h-4" />
+                    </span>
+                  )}
+
+                  <span className={`text-lg ${!canPlay ? 'opacity-70' : 'drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]'}`}>
+                    {levelNumber}
+                  </span>
+                </button>
               )
             })}
           </div>
 
-          {currentLevel > 50 && (
-            <p className="text-white/60 mt-4 text-center text-sm">
-              +{currentLevel - 50} level lagi tersedia...
-            </p>
-          )}
+          <div className="flex items-center gap-4 mt-4 text-sm text-white/70">
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 rounded bg-gradient-to-br from-emerald-400 to-teal-600 inline-block"></span>
+              <span>Level terbaru</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 rounded bg-gradient-to-br from-green-500 to-emerald-600 inline-block"></span>
+              <span>Bisa dipilih</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 rounded bg-gray-600 inline-block"></span>
+              <span>Terkunci</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+          </div>
   )
 }

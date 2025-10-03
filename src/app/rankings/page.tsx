@@ -2,9 +2,10 @@
 
 import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 import { Trophy, Medal, Award, Crown, Star, ArrowLeft } from 'lucide-react'
 
 interface RankingUser {
@@ -25,19 +26,9 @@ export default function RankingsPage() {
   const [totalPlayers, setTotalPlayers] = useState(0)
   const [loadingRankings, setLoadingRankings] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/')
-      return
-    }
-
-    if (user) {
-      fetchRankings()
-    }
-  }, [user, loading, router])
-
-  const fetchRankings = async () => {
+  const fetchRankings = useCallback(async () => {
     try {
       setLoadingRankings(true)
       setError(null)
@@ -58,7 +49,39 @@ export default function RankingsPage() {
     } finally {
       setLoadingRankings(false)
     }
-  }
+  }, [user])
+
+  
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/')
+      return
+    }
+
+    if (user) {
+      fetchRankings()
+    }
+  }, [user, loading, router, fetchRankings])
+
+  
+  useEffect(() => {
+    if (!user) return
+
+    const channel = supabase
+      .channel('realtime-rankings')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => {
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+        debounceRef.current = setTimeout(() => {
+          fetchRankings()
+        }, 300)
+      })
+      .subscribe()
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+      supabase.removeChannel(channel)
+    }
+  }, [user, fetchRankings])
 
   const getRankIcon = (rank: number) => {
     switch (rank) {

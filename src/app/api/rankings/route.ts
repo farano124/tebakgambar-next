@@ -83,21 +83,37 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // If current user is not in top 50, get their specific ranking
+    // If current user is not in top 50, compute their specific ranking server-side
     if (!currentUserRank) {
-      const { data: userRankData, error: rpcError } = await supabase
-        .rpc('get_user_rank', { user_id: user.id })
+      // Fetch current user's record
+      const { data: me, error: meError } = await supabase
+        .from('users')
+        .select('level, salah, created_at')
+        .eq('id', user.id)
+        .eq('akses', 1)
+        .single()
 
-      if (rpcError) {
-        console.error('RPC error:', rpcError)
-        return NextResponse.json(
-          { error: 'Failed to calculate user rank' },
-          { status: 500 }
-        )
-      }
+      if (!meError && me) {
+        // Count users with higher ranking:
+        // - higher level OR
+        // - same level and fewer salah OR
+        // - same level & salah but earlier created_at
+        const createdAtISO = new Date(me.created_at).toISOString()
+        const orConditions = [
+          `level.gt.${me.level}`,
+          `and(level.eq.${me.level},salah.lt.${me.salah})`,
+          `and(level.eq.${me.level},salah.eq.${me.salah},created_at.lt.${createdAtISO})`
+        ].join(',')
 
-      if (userRankData) {
-        currentUserRank = userRankData
+        const { count: aheadCount, error: aheadError } = await supabase
+          .from('users')
+          .select('*', { count: 'exact', head: true })
+          .eq('akses', 1)
+          .or(orConditions)
+
+        if (!aheadError && typeof aheadCount === 'number') {
+          currentUserRank = aheadCount + 1
+        }
       }
     }
 
