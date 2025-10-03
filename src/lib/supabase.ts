@@ -47,13 +47,13 @@ export function createServerClient(cookiesArg?: any) {
         return {
           get(name: string) {
             const all = source.getAll()
-            const found = Array.isArray(all) ? all.find((c: any) => c?.name === name) : undefined
+            const found = Array.isArray(all) ? all.find((c: { name?: string; value?: string }) => c?.name === name) : undefined
             return found?.value
           },
-          set(name: string, value: string, options?: any) {
+          set(name: string, value: string, options?: Record<string, unknown>) {
             source.setAll([{ name, value, options }])
           },
-          remove(name: string, options?: any) {
+          remove(name: string, options?: Record<string, unknown>) {
             source.setAll([{ name, value: '', options }])
           },
         }

@@ -49,7 +49,7 @@ export default function RankingsPage() {
     } finally {
       setLoadingRankings(false)
     }
-  }, [user])
+  }, [])
 
   
   useEffect(() => {
