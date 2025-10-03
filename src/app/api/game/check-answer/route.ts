@@ -1,7 +1,12 @@
 import { createServerClient } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
+import { User } from '@supabase/supabase-js'
 
 export async function POST(request: NextRequest) {
+  let user: User | null = null
+  let level: string = ''
+  let userAnswer: string = ''
+
   try {
     const supabase = createServerClient({
       cookies: {
@@ -17,7 +22,8 @@ export async function POST(request: NextRequest) {
         },
       },
     })
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    const { data: { user: authUser }, error: userError } = await supabase.auth.getUser()
+    user = authUser
 
     if (userError || !user) {
       return NextResponse.json(
@@ -26,8 +32,39 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Ensure user profile exists in users table
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('id')
+      .eq('id', user.id)
+      .single()
+
+    if (!existingUser) {
+      const { error: createUserError } = await supabase
+        .from('users')
+        .insert({
+          id: user.id,
+          email: user.email,
+          username: user.user_metadata?.username || user.email?.split('@')[0] || 'user',
+          nama: user.user_metadata?.nama || user.user_metadata?.full_name || 'User',
+          level: 1,
+          akses: 1, // Regular user
+          salah: 0
+        })
+
+      if (createUserError) {
+        console.error('Error creating user profile:', createUserError)
+        return NextResponse.json(
+          { error: 'Failed to create user profile' },
+          { status: 500 }
+        )
+      }
+    }
+
     const body = await request.json()
-    const { level, answer: userAnswer } = body
+    const { level: levelParam, answer: answerParam } = body
+    level = levelParam
+    userAnswer = answerParam
 
     console.log('Check answer API - User:', user?.id, 'Level:', level, 'Answer:', userAnswer)
 
@@ -82,17 +119,18 @@ export async function POST(request: NextRequest) {
       isCompleted = existingProgress.completed || isCorrect
     }
 
-    // Update or insert user progress
-    console.log('Upserting progress - user_id:', user.id, 'level:', levelNumber, 'completed:', isCompleted, 'attempts:', newAttempts)
+    // Update or insert user progress (handle conflict on user_id+level)
     const { error: progressError } = await supabase
       .from('user_progress')
-      .upsert({
-        user_id: user.id,
-        level: levelNumber,
-        completed: isCompleted,
-        attempts: newAttempts
-      })
-    console.log('Upsert error:', progressError)
+      .upsert(
+        {
+          user_id: user.id,
+          level: levelNumber,
+          completed: isCompleted,
+          attempts: newAttempts
+        },
+        { onConflict: 'user_id,level' }
+      )
 
     if (progressError) {
       console.error('Error updating progress:', progressError)
