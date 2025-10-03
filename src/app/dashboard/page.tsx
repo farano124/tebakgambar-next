@@ -4,7 +4,6 @@ import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/Button'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { SoundToggle } from '@/components/ui/SoundToggle'
 import Link from 'next/link'
 import { LogOut, User, Trophy, Play, CheckCircle, Shield, Award } from 'lucide-react'
@@ -132,7 +131,6 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center space-x-3 slide-in-right">
             <SoundToggle />
-            <ThemeToggle />
             <Button onClick={handleSignOut} variant="danger" size="sm" className="btn-hover-lift">
               <LogOut className="w-4 h-4 mr-2" />
               Keluar

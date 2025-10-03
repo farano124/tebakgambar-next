@@ -3,7 +3,6 @@ import { Poppins, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/lib/auth";
-import { ThemeProvider } from "@/lib/theme";
 import { SoundProvider } from "@/lib/sound";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -45,11 +44,10 @@ export default function RootLayout({
     <html lang="id">
       <body className={`${poppins.variable} ${inter.variable} ${jakarta.variable} font-sans min-h-screen transition-all duration-500 relative overflow-x-hidden`}>
         <div className="particles-bg"></div>
-        <ThemeProvider>
-          <SoundProvider>
-            <AuthProvider>
-              <ErrorBoundary>
-                <Toaster
+        <SoundProvider>
+          <AuthProvider>
+            <ErrorBoundary>
+              <Toaster
                   position="top-right"
                   toastOptions={{
                     duration: 4000,
@@ -67,7 +65,6 @@ export default function RootLayout({
               </ErrorBoundary>
             </AuthProvider>
           </SoundProvider>
-        </ThemeProvider>
       </body>
     </html>
   );

@@ -36,7 +36,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch achievements' }, { status: 500 })
     }
 
-    return NextResponse.json(userAchievements || [])
+    return NextResponse.json((userAchievements || []).map((ua) => ({
+      achievementId: ua.achievement_id,
+      unlockedAt: ua.unlocked_at,
+      progress: ua.progress
+    })))
   } catch (error) {
     console.error('Achievements API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
@@ -96,12 +100,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert the achievement
+    const progressValue = progress ? getProgressValue(achievement.criteria.type, progress) : 0
     const { data: newAchievement, error } = await supabase
       .from('user_achievements')
       .insert({
         user_id: user.id,
         achievement_id: achievementId,
-        progress: progress ? JSON.stringify(progress) : 0,
+        progress: progressValue,
       })
       .select()
       .single()

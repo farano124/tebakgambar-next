@@ -164,6 +164,36 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Backfill progression achievements to match current reached level
+    const { data: latestUser } = await supabase
+      .from('users')
+      .select('level')
+      .eq('id', user.id)
+      .single()
+
+    const reachedLevel = Math.max(0, (latestUser?.level ?? 1) - 1)
+    const progression = [
+      { id: 'first_steps', threshold: 1 },
+      { id: 'getting_started', threshold: 10 },
+      { id: 'halfway_there', threshold: 50 },
+      { id: 'master_player', threshold: 100 },
+    ]
+
+    for (const a of progression) {
+      if (reachedLevel >= a.threshold) {
+        const { error: achError } = await supabase
+          .from('user_achievements')
+          .upsert(
+            { user_id: user.id, achievement_id: a.id, progress: reachedLevel },
+            { onConflict: 'user_id,achievement_id' }
+          )
+
+        if (achError) {
+          console.error('Error unlocking achievement', a.id, achError)
+        }
+      }
+    }
+
     return NextResponse.json({
       correct: isCorrect,
       attempts: newAttempts,

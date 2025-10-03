@@ -22,7 +22,7 @@ export const Button = memo<ButtonProps>(function Button({
     playSound('buttonClick')
     onClick?.(event)
   }, [onClick, playSound])
-  const baseClasses = 'rounded-xl font-bold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
+  const baseClasses = 'flex items-center rounded-xl font-bold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
 
   const variantClasses = {
     primary: 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 focus:ring-blue-500',

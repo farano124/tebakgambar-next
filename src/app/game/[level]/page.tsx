@@ -148,7 +148,11 @@ export default function GamePage() {
           totalCorrect: gameStats.totalCorrect + 1,
           currentStreak: gameStats.currentStreak + 1,
           gamesPlayed: gameStats.gamesPlayed + 1,
-          perfectLevels: gameStats.perfectLevels + (gameStats.hintsUsed === 0 ? 1 : 0)
+          perfectLevels: gameStats.perfectLevels + (gameStats.hintsUsed === 0 ? 1 : 0),
+          // When level is completed, make sure currentLevel reflects the highest completed level
+          currentLevel: result.levelCompleted
+            ? Math.max(gameStats.currentLevel, parseInt(levelParam))
+            : gameStats.currentLevel,
         }
 
         // Check achievements asynchronously
@@ -256,30 +260,27 @@ export default function GamePage() {
   return (
     <div className="min-h-screen p-4 slide-in-up">
       {/* Header */}
-      <nav className="glass-card-enhanced p-6 mb-8 floating">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4 slide-in-left">
+      <nav className="glass-card-enhanced p-4 md:p-6 mb-8 floating">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 md:gap-4 slide-in-left">
             <Link href="/dashboard">
-              <Button variant="outline" size="sm" className="btn-hover-lift">
+              <Button variant="outline" size="sm" className="btn-hover-lift inline-flex items-center">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Kembali
               </Button>
             </Link>
-            <div>
-              <h1 className="text-3xl font-bold rainbow-text font-display">
-                Level {levelData.level}
-              </h1>
-              <p className="text-white/70">
-                {levelData.progress?.attempts || 0} percobaan
-              </p>
-            </div>
+            <span className="hidden md:inline-block w-px h-6 bg-white/20" />
+            <Link href="/dashboard">
+              <Button variant="glass" size="sm" className="btn-hover-lift inline-flex items-center">
+                <Home className="w-4 h-4 mr-2" />
+                Dashboard
+              </Button>
+            </Link>
           </div>
-          <Link href="/dashboard" className="slide-in-right">
-            <Button variant="glass" size="sm" className="btn-hover-lift">
-              <Home className="w-4 h-4 mr-2" />
-              Dashboard
-            </Button>
-          </Link>
+          <div className="text-right slide-in-right">
+            <h1 className="text-2xl md:text-3xl font-bold rainbow-text font-display">Level {levelData.level}</h1>
+            <p className="text-white/70 text-sm">{levelData.progress?.attempts || 0} percobaan</p>
+          </div>
         </div>
       </nav>
 
