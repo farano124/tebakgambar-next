@@ -32,23 +32,6 @@ export default function ProfilePage() {
   })
   const [saving, setSaving] = useState(false)
 
-  // Password change modal
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
-  const [passwordForm, setPasswordForm] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  })
-  const [changingPassword, setChangingPassword] = useState(false)
-
-  // Notification settings modal
-  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false)
-  const [notificationSettings, setNotificationSettings] = useState({
-    emailNotifications: true,
-    pushNotifications: false,
-    achievementNotifications: true
-  })
-  const [savingNotifications, setSavingNotifications] = useState(false)
 
   useEffect(() => {
     if (!loading && !user) {
@@ -127,68 +110,7 @@ export default function ProfilePage() {
     setIsEditing(false)
   }
 
-  const handlePasswordChange = async () => {
-    if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
-      toast.error('Semua field password harus diisi')
-      return
-    }
 
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      toast.error('Password baru dan konfirmasi password tidak cocok')
-      return
-    }
-
-    if (passwordForm.newPassword.length < 6) {
-      toast.error('Password baru harus minimal 6 karakter')
-      return
-    }
-
-    setChangingPassword(true)
-    try {
-      const response = await fetch('/api/user/change-password', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          currentPassword: passwordForm.currentPassword,
-          newPassword: passwordForm.newPassword
-        }),
-      })
-
-      if (response.ok) {
-        toast.success('Password berhasil diubah! 🎉')
-        setIsPasswordModalOpen(false)
-        setPasswordForm({
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        })
-      } else {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
-        toast.error(errorData.error || 'Gagal mengubah password')
-      }
-    } catch (error) {
-      console.error('Error changing password:', error)
-      toast.error('Terjadi kesalahan saat mengubah password')
-    } finally {
-      setChangingPassword(false)
-    }
-  }
-
-  const handleSaveNotifications = async () => {
-    setSavingNotifications(true)
-    try {
-      // For now, just show success since backend isn't implemented yet
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
-      toast.success('Pengaturan notifikasi berhasil disimpan! 🎉')
-      setIsNotificationModalOpen(false)
-    } catch (error) {
-      toast.error('Terjadi kesalahan saat menyimpan pengaturan')
-    } finally {
-      setSavingNotifications(false)
-    }
-  }
 
   if (loading || loadingProfile) {
     return (
@@ -218,147 +140,6 @@ export default function ProfilePage() {
           </div>
         </div>
   
-        {/* Password Change Modal */}
-        {isPasswordModalOpen && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="glass-card-enhanced p-6 w-full max-w-md bounce-in">
-              <h2 className="text-2xl font-bold rainbow-text mb-6">Ubah Password</h2>
-  
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">Password Saat Ini</label>
-                  <input
-                    type="password"
-                    value={passwordForm.currentPassword}
-                    onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
-                    className="input-enhanced w-full px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
-                    placeholder="Masukkan password saat ini"
-                  />
-                </div>
-  
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">Password Baru</label>
-                  <input
-                    type="password"
-                    value={passwordForm.newPassword}
-                    onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
-                    className="input-enhanced w-full px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
-                    placeholder="Masukkan password baru"
-                  />
-                </div>
-  
-                <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">Konfirmasi Password Baru</label>
-                  <input
-                    type="password"
-                    value={passwordForm.confirmPassword}
-                    onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    className="input-enhanced w-full px-4 py-3 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
-                    placeholder="Konfirmasi password baru"
-                  />
-                </div>
-              </div>
-  
-              <div className="flex space-x-3 mt-6">
-                <Button
-                  onClick={handlePasswordChange}
-                  disabled={changingPassword}
-                  variant="success"
-                  className="flex-1"
-                >
-                  {changingPassword ? 'Mengubah...' : 'Ubah Password'}
-                </Button>
-                <Button
-                  onClick={() => {
-                    setIsPasswordModalOpen(false)
-                    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
-                  }}
-                  variant="outline"
-                  disabled={changingPassword}
-                >
-                  Batal
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-  
-        {/* Notification Settings Modal */}
-        {isNotificationModalOpen && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="glass-card-enhanced p-6 w-full max-w-md bounce-in">
-              <h2 className="text-2xl font-bold rainbow-text mb-6">Pengaturan Notifikasi</h2>
-  
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-white/10 rounded-lg">
-                  <div>
-                    <p className="text-white font-medium">Notifikasi Email</p>
-                    <p className="text-white/60 text-sm">Terima notifikasi melalui email</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.emailNotifications}
-                      onChange={(e) => setNotificationSettings(prev => ({ ...prev, emailNotifications: e.target.checked }))}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                  </label>
-                </div>
-  
-                <div className="flex items-center justify-between p-3 bg-white/10 rounded-lg">
-                  <div>
-                    <p className="text-white font-medium">Notifikasi Push</p>
-                    <p className="text-white/60 text-sm">Terima notifikasi push di browser</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.pushNotifications}
-                      onChange={(e) => setNotificationSettings(prev => ({ ...prev, pushNotifications: e.target.checked }))}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                  </label>
-                </div>
-  
-                <div className="flex items-center justify-between p-3 bg-white/10 rounded-lg">
-                  <div>
-                    <p className="text-white font-medium">Notifikasi Achievement</p>
-                    <p className="text-white/60 text-sm">Notifikasi saat mendapat achievement baru</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.achievementNotifications}
-                      onChange={(e) => setNotificationSettings(prev => ({ ...prev, achievementNotifications: e.target.checked }))}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                  </label>
-                </div>
-              </div>
-  
-              <div className="flex space-x-3 mt-6">
-                <Button
-                  onClick={handleSaveNotifications}
-                  disabled={savingNotifications}
-                  variant="success"
-                  className="flex-1"
-                >
-                  {savingNotifications ? 'Menyimpan...' : 'Simpan'}
-                </Button>
-                <Button
-                  onClick={() => setIsNotificationModalOpen(false)}
-                  variant="outline"
-                  disabled={savingNotifications}
-                >
-                  Batal
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     )
   }
@@ -493,8 +274,8 @@ export default function ProfilePage() {
           </div>
 
           {/* Account Settings */}
-          <div className="glass-card p-6">
-            <h3 className="text-xl font-bold gradient-text mb-4">Pengaturan Akun</h3>
+          <div className="glass-card-enhanced p-6 floating bounce-in">
+            <h3 className="text-xl font-bold rainbow-text mb-4">Pengaturan Akun</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
                 <div>
@@ -502,25 +283,11 @@ export default function ProfilePage() {
                   <p className="text-white/60 text-sm">Perbarui kata sandi akun Anda</p>
                 </div>
                 <Button
-                  onClick={() => setIsPasswordModalOpen(true)}
+                  onClick={() => router.push('/reset-password')}
                   variant="outline"
                   size="sm"
                 >
                   Ubah
-                </Button>
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
-                <div>
-                  <p className="text-white font-medium">Notifikasi</p>
-                  <p className="text-white/60 text-sm">Kelola preferensi notifikasi</p>
-                </div>
-                <Button
-                  onClick={() => setIsNotificationModalOpen(true)}
-                  variant="outline"
-                  size="sm"
-                >
-                  Atur
                 </Button>
               </div>
             </div>
