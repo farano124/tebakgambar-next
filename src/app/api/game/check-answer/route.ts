@@ -29,6 +29,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { level, answer: userAnswer } = body
 
+    console.log('Check answer API - User:', user?.id, 'Level:', level, 'Answer:', userAnswer)
+
     if (!level || !userAnswer) {
       return NextResponse.json(
         { error: 'Level and answer are required' },
@@ -81,15 +83,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Update or insert user progress
+    console.log('Upserting progress - user_id:', user.id, 'level:', levelNumber, 'completed:', isCompleted, 'attempts:', newAttempts)
     const { error: progressError } = await supabase
       .from('user_progress')
       .upsert({
         user_id: user.id,
         level: levelNumber,
         completed: isCompleted,
-        attempts: newAttempts,
-        updated_at: new Date().toISOString()
+        attempts: newAttempts
       })
+    console.log('Upsert error:', progressError)
 
     if (progressError) {
       console.error('Error updating progress:', progressError)
@@ -111,17 +114,15 @@ export async function POST(request: NextRequest) {
       const newLevel = Math.max(currentLevel, levelNumber + 1)
 
       if (newLevel > currentLevel) {
+        console.log('Updating user level to:', newLevel)
         const { error: levelUpdateError } = await supabase
           .from('users')
           .update({
-            level: newLevel,
-            updated_at: new Date().toISOString()
+            level: newLevel
           })
           .eq('id', user.id)
 
-        if (levelUpdateError) {
-          console.error('Error updating user level:', levelUpdateError)
-        }
+        console.log('User level update error:', levelUpdateError)
       }
     }
 

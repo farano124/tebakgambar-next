@@ -120,7 +120,9 @@ export default function GamePage() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to check answer')
+        const errorText = await response.text()
+        console.error('API Error - Status:', response.status, 'Response:', errorText)
+        throw new Error(`Failed to check answer: ${response.status} ${errorText}`)
       }
 
       const result: AnswerResult = await response.json()
@@ -291,13 +293,13 @@ export default function GamePage() {
 
             {/* Image */}
             <div className="mb-8">
-              <div className="relative max-w-full max-h-64 mx-auto card-hover-3d">
+              <div className="relative w-full h-64 mx-auto card-hover-3d flex items-center justify-center">
                 <Image
                   src={levelData.gambar || '/file.svg'}
                   alt={`Level ${levelData.level} - Tebak Gambar`}
-                  width={500}
-                  height={300}
-                  className="rounded-2xl shadow-2xl object-contain transition-all duration-300 hover:scale-105"
+                  width={400}
+                  height={256}
+                  className="rounded-2xl shadow-2xl object-contain transition-all duration-300 hover:scale-105 max-w-full max-h-full"
                   priority
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
@@ -319,7 +321,7 @@ export default function GamePage() {
                 onChange={(e) => setAnswer(e.target.value.toUpperCase())}
                 onKeyPress={handleKeyPress}
                 placeholder="Ketik jawaban Anda..."
-                className="input-enhanced w-full max-w-md mx-auto px-6 py-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all text-center text-xl font-bold backdrop-blur-sm shadow-lg focus-ring"
+                className="input-enhanced w-full max-w-md mx-auto px-6 py-4 rounded-2xl text-black bg-white/90 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all text-center text-xl font-bold backdrop-blur-sm shadow-lg focus-ring"
                 autoFocus
                 required
                 disabled={submitting || showResult}
@@ -427,6 +429,7 @@ export default function GamePage() {
             <Button
               onClick={() => setShowResult(false)}
               variant={lastResult.correct ? "success" : "warning"}
+              size="lg"
               className="w-full btn-hover-lift"
             >
               {lastResult.correct ? 'Lanjutkan' : 'Coba Lagi'}
